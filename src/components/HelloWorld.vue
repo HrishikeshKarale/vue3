@@ -120,6 +120,7 @@
 
 <script lang="ts">
 import { Options, Vue } from "vue-class-component";
+// import { useStore } from "vuex";
 
 @Options({
   props: {
@@ -128,6 +129,10 @@ import { Options, Vue } from "vue-class-component";
 })
 export default class HelloWorld extends Vue {
   msg!: string;
+
+  setup() {
+    // const store = useStore();
+  }
 }
 </script>
 
