@@ -8,7 +8,13 @@
       @selected="val => toggleCompletion(val)"
       @alerts="alerts"
     />
-    <span class="fas fa-minus-square" @click.prevent="toggleCompletion()" />
+    <!-- <vue-button
+      name="deleteTask"
+      style="icon-sm"
+      icon="fas fa-minus-square"
+      :ctx="toggleCompletion.bind(this)"
+    /> -->
+    <span class="fas fa-minus-square" @click.prevent="removeTask()">+</span>
   </section>
 </template>
 <script lang="ts">
@@ -17,9 +23,10 @@ import { defineComponent, ref } from "vue";
 import { useStore } from "@/store";
 import { MutationType } from "@/store/mutations";
 import radioInput from "../form/radioInput.vue";
+import vueButton from "../vueButton.vue";
 
 export default defineComponent({
-  components: { radioInput },
+  components: { radioInput /*, vueButton*/ },
   props: {
     id: {
       type: Number,
@@ -47,6 +54,13 @@ export default defineComponent({
       });
     };
 
+    const removeTask = (): void => {
+      store.commit(MutationType.RemoveItem, {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        id: props.id!
+      });
+    };
+
     //used to trigger events if component throws an error
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     let dWarning = null;
@@ -62,22 +76,18 @@ export default defineComponent({
       }
     }; //alerts
 
-    return { toggleCompletion, alerts, booleanTrue };
+    return { toggleCompletion, removeTask, alerts, booleanTrue };
   }
 });
 </script>
 <style lang="less">
+@import (reference) "../../Less/customVariables.less";
 section {
   display: flex;
-  // & > label {
-  //   padding: 8px 16px;
-  //   border: 1px solid black;
-  //   border-radius: 4px;
-  //   display: flex;
-  //   flex-direction: row;
-  //   flex-wrap: nowrap;
-  //   justify-content: center;
-  //   align-content: center;
-  // }
+  & > span {
+    color: red;
+    padding: @spaceMd;
+    cursor: pointer;
+  }
 }
 </style>
