@@ -19,15 +19,16 @@
       {{ label }}
       <abbr v-if="required" title="Required Field">*</abbr>
       <span v-else> - Optional field<abbr>*</abbr></span>
+      <!-- stores the value of the component to be used when validating a form -->
       <input :name="name" type="hidden" :value="value" :required="required" />
       <vue-button
         v-if="options && value"
         id="clearSelection"
-        button-name="resetValue"
-        button-text="Reset"
-        button-icon="fas fa-undo"
-        button-style="icon-sm"
-        :on-click-action="clearSelection.bind(this)"
+        name="resetValue"
+        text="Reset"
+        icon="fas fa-undo"
+        style="icon-sm"
+        :ctx="clearSelection.bind(this)"
       />
     </label>
     <div
@@ -78,7 +79,7 @@
 </template>
 
 <script>
-import inputResponse from "@/components/inputResponse";
+import inputResponse from "@/components/form/inputResponse";
 import vueButton from "@/components/vueButton";
 
 export default {
@@ -279,8 +280,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import (reference) "../Less/customMixins.less";
-@import (reference) "../Less/customVariables.less";
+@import (reference) "../../Less/customMixins.less";
+@import (reference) "../../Less/customVariables.less";
 
 .radioInput {
   .checkboxCss();
