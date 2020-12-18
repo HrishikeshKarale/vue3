@@ -9,11 +9,11 @@
       :class="{
         dWarningContainer: dWarning,
         errorContainer: dDanger,
-        iconPadding: inputIcon,
+        iconPadding: icon,
         maskField: mask
       }"
     >
-      <span v-if="inputIcon" :class="inputIcon" />
+      <span v-if="icon" :class="icon" />
       <input
         v-if="!mask"
         v-model="selectedOption"
@@ -56,7 +56,7 @@ export default {
       default: null
     },
 
-    //sets tag attribute for the input field (required field in case of forms)
+    //sets name attribute for the input field (required field in case of forms)
     tag: {
       required: false,
       type: [String, null],
@@ -180,7 +180,7 @@ export default {
       default: false
     },
 
-    //reserves space and created a mask if set to true
+    //reserves space and creates a mask if set to true
     mask: {
       required: false,
       type: [Boolean, null],
@@ -189,7 +189,7 @@ export default {
 
     //if a valid fontawesome icon class string is passed, it displays it in the input field
     //a valid fontawesome icons class string is a string which starts with fas/far/fab/fa
-    inputIcon: {
+    icon: {
       required: false,
       type: [String, null],
       default: null
@@ -223,7 +223,7 @@ export default {
     }
   }, //watch
 
-  created() {
+  beforeMount() {
     //store value of prop in temp variable for code readability
     const val = this.value;
     const options = this.options;
@@ -275,9 +275,7 @@ export default {
       this.dDanger =
         "Invalid Input: The preset value(s) " + val + " are not valid";
     }
-  }, //created
 
-  beforeMount() {
     const alertMessage = this.alertMessage;
 
     if (this.value) {
