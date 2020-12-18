@@ -2,29 +2,40 @@
 //https://zapier.com/blog/best-todo-list-apps/
 <template>
   <div class="inputTags">
-    <ul v-if="tag.list" ref="tags">
-      <template v-for="item in tag.list" :key="item">
-        <li v-if="item">
-          {{ item }}
-        </li>
-      </template>
-    </ul>
     <searchable-dropdown-list
       tag="tagGenerator"
       :options="tag.list"
       :value="tag.val"
       :strict="!booleanTrue"
       placeholder="Enter tags..."
-      icon="fas fa-times"
+      :maxlength="maxlength"
+      icon="fas fa-tags"
       @alerts="alerts"
       @input="addTag"
     />
+    <ul v-if="tag.list" ref="tags">
+      <template v-for="(item, index) in tag.list" :key="index">
+        <li v-if="item">
+          <!-- <tag :text="item" :cts="removeTag.bind(index)" /> -->
+          <div class="tag">
+            <i class="fas fa-tag" />
+            <span>
+              {{ item }}
+            </span>
+            <i
+              class="fas fa-times"
+              @click.prevent="removeTag.bind(this, index)"
+            />
+          </div>
+        </li>
+      </template>
+    </ul>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 
-import searchableDropdownList from "./searchableDropdownList.vue";
+import searchableDropdownList from "../form/searchableDropdownList.vue";
 
 export default defineComponent({
   components: { searchableDropdownList },
@@ -34,7 +45,7 @@ export default defineComponent({
       type: Array,
       required: false,
       default: () => {
-        return [""];
+        return [];
       }
     }
   }, //props
@@ -46,6 +57,7 @@ export default defineComponent({
     });
     // const list = [];
     const booleanTrue = true;
+    const maxlength = 16;
 
     const addTag = (val: string) => {
       tag.val = val;
@@ -59,6 +71,7 @@ export default defineComponent({
     };
 
     const removeTag = (index: number) => {
+      console.log("remove");
       tag.list.splice(index, 1);
     };
 
@@ -76,7 +89,7 @@ export default defineComponent({
       }
     };
 
-    return { addTag, removeTag, tag, alerts, booleanTrue };
+    return { addTag, removeTag, tag, alerts, booleanTrue, maxlength };
   }
 });
 </script>
@@ -86,33 +99,46 @@ export default defineComponent({
 .inputTags {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: flex-start;
-  border: 1px solid black;
+  border: 1px solid @secondaryColor;
   border-radius: @borderRadius;
-  max-width: 320px;
-  height: fit-content;
+  min-width: 160px;
+  max-width: 240px;
   & > ul {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     list-style-type: none;
     flex-wrap: wrap;
+    padding: @spaceSm @spaceMd !important;
     & > li {
-      border: 1px solid black;
-      border-radius: 2px;
-      padding: 1px;
-      margin: 1px;
       font-size: @fontSizeSm;
+      padding: 0 @spaceSm !important;
+      & > .tag {
+        border: 1px solid @secondaryColor;
+        border-radius: 4px 16px 16px 4px;
+        & > i {
+          padding: @spaceMd;
+          color: @secondaryColor;
+          cursor: pointer;
+        }
+      }
     }
   }
   & > .searchableDropdownList {
     min-width: 100% !important;
+    & > .iconPadding {
+      border: none !important;
+    }
     input,
     datalist,
     option {
-      width: 100% !important;
+      min-with: 80px;
+      max-width: 100% !important;
     }
     & > .inputResponse {
+      width: 0px;
       display: none !important;
     }
   }

@@ -10,6 +10,7 @@
   height: 100px;
   background: @secondaryColor;
 }
+
 .circle {
   width: 100px;
   height: 100px;
@@ -91,6 +92,7 @@
   border-top: 9px solid transparent;
   border-right: 9px solid @secondaryColor;
   transform: rotate(10deg);
+
   &::after {
     content: "";
     position: absolute;
@@ -110,7 +112,7 @@
   border-left: 25px solid transparent;
   border-right: 25px solid transparent;
   height: 0;
-  width: 100px; 
+  width: 100px;
 }
 
 .parallelogram {
@@ -127,6 +129,7 @@
   border-right: 50px solid transparent;
   border-bottom: 100px solid @secondaryColor;
   position: relative;
+
   &::after {
     width: 0;
     height: 0;
@@ -151,6 +154,7 @@
   border-bottom: 70px solid @secondaryColor;
   border-left: 100px solid transparent;
   transform: rotate(35deg);
+
   &::after {
     position: absolute;
     display: block;
@@ -165,6 +169,7 @@
     transform: rotate(-70deg);
     content: '';
   }
+
   &::before {
     border-bottom: 80px solid @secondaryColor;
     border-left: 30px solid transparent;
@@ -187,6 +192,7 @@
   border-width: 50px 18px 0;
   border-style: solid;
   border-color: @secondaryColor transparent;
+
   &::before {
     content: "";
     position: absolute;
@@ -205,6 +211,7 @@
   height: 57.735px;
   background: @secondaryColor;
   position: relative;
+
   &::after {
     content: "";
     position: absolute;
@@ -216,6 +223,7 @@
     border-right: 50px solid transparent;
     border-top: 28.8675px solid @secondaryColor;
   }
+
   &::before {
     content: "";
     position: absolute;
@@ -234,6 +242,7 @@
   height: 100px;
   background: @secondaryColor;
   position: relative;
+
   &::before {
     content: "";
     width: 100px;
@@ -245,6 +254,7 @@
     border-left: 29px solid #eee;
     border-right: 29px solid #eee;
   }
+
   &::after {
     content: "";
     width: 100px;
@@ -263,6 +273,7 @@
   position: relative;
   width: 100px;
   height: 90px;
+
   &::before,
   &::after {
     position: absolute;
@@ -578,6 +589,7 @@
     left: -10px;
     transform: rotate(-140deg);
   }
+
   &::after {
     left: auto;
     right: -10px;
@@ -924,7 +936,7 @@
 }
 
 abbr[title] {
-    border: none;
+  border: none;
 }
 
 article {
@@ -932,11 +944,13 @@ article {
   flex-direction: column;
   justify-content: center;
   align-content: center;
-  & > header {
+
+  &>header {
     visibility: hidden;
     height: 0;
   }
-  & > section {
+
+  &>section {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -946,44 +960,50 @@ article {
 }
 
 a {
+
   &,
-  & > *,
-  & + * {
+  &>*,
+  &+* {
     color: @secondaryColor;
     text-decoration: none !important;
   }
 }
 
 p {
-  margin: 0 0 @spaceLg !important;
+  margin: 0 0 @spaceLg  !important;
   line-height: @spaceXl  !important;
 }
 
 input {
   min-height: @spaceMd + @spaceXl;
   color: @textColor;
-  & + label,
-  & > label {
+
+  &+label,
+  &>label {
     margin-left: @spaceMd;
   }
+
   &:-webkit-autofill {
-    .boxShadow(0 0 0 50px @backgroundColor inset); /* Change the color to your own background color */
+    .boxShadow(0 0 0 50px @backgroundColor inset);
+    /* Change the color to your own background color */
     -webkit-text-fill-color: @textColor;
   }
 
   &:-webkit-autofill:focus {
-      .boxShadow(0 0 0 50px @backgroundColor inset);/*your box-shadow*/
-      -webkit-text-fill-color: @textColor;
-  } 
+    .boxShadow(0 0 0 50px @backgroundColor inset);
+    /*your box-shadow*/
+    -webkit-text-fill-color: @textColor;
+  }
 }
 
 ul {
-  margin: 0;
-  padding: 0;
+  margin: 0 !important;
+  padding: 0 !important;
   list-style-type: none;
-  & > li{
-    margin: 0;
-    padding: 0;
+
+  &>li {
+    margin: 0 !important;
+    padding: 0 !important;
   }
 }
 
@@ -1032,9 +1052,9 @@ ul {
 }
 
 // Specificity overrides
-input[type= "submit"],
-input[type= "reset"],
-input[type= "button"] {
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
   &.btn-block {
     width: 100%;
   }
@@ -1198,10 +1218,10 @@ body {
   height: 100%;
   width: 100%;
   z-index: @bodyZ;
+
   &#portfolio {
     font-family: @fontFamily, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
-

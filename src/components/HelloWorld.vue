@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import inputTags from "./form/inputTags.vue";
+import inputTags from "./inputTags/inputTags.vue";
 
 export default {
   components: { inputTags },
