@@ -170,15 +170,19 @@ export default {
       type: [Function, null],
       required: function(props) {
         // console.log(props.type);
-        if (props.type === "button") {
-          return true;
+        if (props.type != "button") {
+          return false;
         }
-        return false;
+        return true;
       },
-      default: function() {
-        alert(
-          "button undefined: Please send a function to execute when the button is clicked"
-        );
+      default: function(props) {
+        if (props.type != "button") {
+          return null;
+        } else {
+          alert(
+            "button undefined: Please send a function to execute when the button is clicked"
+          );
+        }
       }
     }
   } //props

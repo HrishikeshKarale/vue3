@@ -1,9 +1,9 @@
 <template>
-  <section :class="{ completed: completed }">
+  <section :class="{ status: status }">
     <radio-input
       :label="todo"
       :tag="`task-${id}`"
-      :value="completed"
+      :value="status"
       @selected="val => toggleCompletion(val)"
       @alerts="alerts"
     />
@@ -34,7 +34,7 @@ export default defineComponent({
       type: String,
       require: true
     },
-    completed: {
+    status: {
       type: Boolean,
       require: true
     }
@@ -44,11 +44,11 @@ export default defineComponent({
     const store = useStore();
     const booleanTrue = ref(true);
 
-    const toggleCompletion = (completed: boolean): void => {
+    const toggleCompletion = (status: boolean): void => {
       store.commit(MutationType.CompleteItem, {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         id: props.id!,
-        completed: completed
+        status: status
       });
     };
 
@@ -95,7 +95,7 @@ section {
   height: max-content;
   position: relative;
   background-color: @backgroundColor;
-  &.completed {
+  &.status {
     .boxShadow(@base, @secondaryColor);
   }
   & > span {

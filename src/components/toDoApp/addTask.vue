@@ -1,5 +1,12 @@
 <template>
-  <form @submit.prevent="createTask">
+  <vue-form
+    :ctx="createTask.bind(this)"
+    dForm="taskForm"
+    :alerts="{ error: dDanger, warning: dWarning }"
+    :validate="!booleanTrue"
+    :autocomplete="booleanTrue"
+    @alerts="alerts"
+  >
     <text-input
       :value="task"
       tag="task"
@@ -9,30 +16,44 @@
       @alerts="alerts"
       @input="val => (task = val)"
     />
-    <vue-button
+    <vue-textarea
+      :value="description"
+      tag="task"
+      placeholder="Enter Tasks...."
+      icon="fas fa-clipboard"
+      @alerts="alerts"
+      @input="val => (description = val)"
+    />
+    <!-- <vue-button
       tag="AddTask"
       text="Add"
       :disabled="!task"
       category="small"
       icon="fas fa-plus"
       :ctx="createTask.bind(this)"
-    />
-  </form>
+    /> -->
+  </vue-form>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, reactive } from "vue";
 
 import { useStore } from "@/store";
 import { ToDoList } from "@/store/state";
 import { MutationType } from "@/store/mutations";
-import vueButton from "../vueButton.vue";
+// import vueButton from "../vueButton.vue";
 import textInput from "../form/textInput.vue";
+import vueTextarea from "../form/vueTextarea.vue";
+import vueForm from "../form/vueForm.vue";
 
 export default defineComponent({
-  components: { vueButton, textInput },
+  components: { /*vueButton, */textInput, vueTextarea, vueForm },
 
   setup() {
     const task = ref("");
+    const booleanTrue = true;
+    const description = ref("");
+    const tags = reactive({ list: [] });
+
     const store = useStore();
 
     const createTask = () => {
@@ -40,13 +61,41 @@ export default defineComponent({
         const item: ToDoList = {
           id: Date.now(),
           todo: task.value,
-          completed: false
+          description: description.value,
+          status: false,
+          completed: null,
+          tags: tags.list
         };
         store.commit(MutationType.CreateItem, item);
         task.value = "";
       } else return;
     };
-    return { createTask, task };
+
+    //used to trigger events if component throws an error
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const dWarning = ref("");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const dDanger = ref("");
+    const alerts = function(type: string, message: string): void {
+      if (type == "warning") {
+        dWarning.value = message;
+      } else if (type == "error") {
+        dDanger.value = message;
+      } else {
+        alert("error in input alert module");
+      }
+    }; //alerts
+
+    return {
+      createTask,
+      task,
+      description,
+      tags,
+      alerts,
+      dWarning,
+      dDanger,
+      booleanTrue
+    };
   }
 });
 </script>
