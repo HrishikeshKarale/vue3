@@ -3,14 +3,14 @@
   <div class="radioInput" :class="{ inline: inline }">
     <label
       v-if="label || (type == 'checkbox' && !options)"
-      :class="{ maskField: mask }"
+      :class="{ maskField: mask, checked: !options && value }"
     >
       <!-- checkbox only -->
       <input
         v-if="type == 'checkbox' && !options && !mask"
         ref="singleCheckbox"
         type="checkbox"
-        :name="name"
+        :name="tag"
         :checked="value"
         :disabled="disabled"
         :autofocus="autofocus"
@@ -18,16 +18,16 @@
       />
       {{ label }}
       <abbr v-if="required" title="Required Field">*</abbr>
-      <span v-else> - Optional field<abbr>*</abbr></span>
+      <span v-else-if="options"> - Optional field<abbr>*</abbr></span>
       <!-- stores the value of the component to be used when validating a form -->
-      <input :name="name" type="hidden" :value="value" :required="required" />
+      <input :name="tag" type="hidden" :value="value" :required="required" />
       <vue-button
         v-if="options && value"
         id="clearSelection"
-        name="resetValue"
+        tag="resetValue"
         text="Reset"
         icon="fas fa-undo"
-        style="icon-sm"
+        category="icon-sm"
         :ctx="clearSelection.bind(this)"
       />
     </label>
@@ -110,8 +110,8 @@ export default {
       default: null
     },
 
-    //sets the name attribute for the input field (required field in case of forms)
-    name: {
+    //sets the tag attribute for the input field (required field in case of forms)
+    tag: {
       required: false,
       type: [String, null],
       default: "radioInput"

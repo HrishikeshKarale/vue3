@@ -118,9 +118,9 @@
 }
 
 .boxShadow(@val, @color: @shadowColor, @zIndex: inherit) {
-  box-shadow: @base @color, @val @color;
-  -webkit-box-shadow: @base @color, @val @color;
-  -moz-box-shadow: @base @color, @val @color;
+  box-shadow: @val @color;
+  -webkit-box-shadow: @val @color;
+  -moz-box-shadow: @val @color;
   z-index: @zIndex;
 }
 
@@ -148,8 +148,8 @@
 
   &[type="checkbox"],
   &[type="radio"] {
-    transform: scale(1.5);
-    margin-right: @spaceMd;
+    transform: scale(1.2);
+    margin-right: @spaceLg;
   }
 }
 
@@ -428,6 +428,13 @@
   &:focus {
     border-color: @secondaryColor;
 
+    datalist,
+    select,
+    input,
+    textarea {
+      .boxShadow(@base, @secondaryColor);
+    }
+
     &>span {
       color: @secondaryColor;
     }
@@ -646,7 +653,6 @@
   >input[type='checkbox'],
   >input[type='radio'] {
     display: block;
-    margin-right: @spaceLg;
 
     //abbr text (optional or required )
     &+span {
@@ -663,16 +669,23 @@
   min-width: 200px;
   height: fit-content;
 
-  &.inline {
-    flex-direction: row;
-    flex-wrap: wrap;
-
-    &>label {
-      .checkboxLabel();
+  & {
+    &.inline {
+      flex-direction: row;
+      flex-wrap: wrap;
     }
 
-    &.errorLabel {
-      color: @dangerText;
+    &>label,
+    &.inline>label {
+      .checkboxLabel();
+
+      &.checked {
+        font-weight: bold;
+      }
+
+      &.errorLabel {
+        color: @dangerText;
+      }
     }
   }
 
@@ -709,10 +722,14 @@
       >input[type='radio'] {
         display: none;
       }
-    }
 
-    &.errorLabel {
-      color: @dangerText;
+      &.checked {
+        font-weight: bold;
+      }
+
+      &.errorLabel {
+        color: @dangerText;
+      }
     }
   }
 

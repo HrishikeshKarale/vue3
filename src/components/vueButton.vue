@@ -2,82 +2,82 @@
   <button
     :class="[
       'vueButton',
-      ['fullWidth', 'border-fwidth'].includes(style) ? 'fullWidth' : null,
-      this.buttonClass
+      ['fullWidth', 'border-fwidth'].includes(category) ? 'fullWidth' : null,
+      buttonClass
     ]"
     :type="type"
-    :name="name"
+    :name="tag"
     :autofocus="autofocus"
     :disabled="disabled"
     :form="form"
     @click.stop.prevent="ctx"
   >
     <span v-if="icon" :class="icon" />
-    <template v-if="!['icon', 'icon-sm', 'icon-lg'].includes(style)">
-      {{ text.toUpperCase() }}
+    <template v-if="!['icon', 'icon-sm', 'icon-lg'].includes(category)">
+      {{ text }}
     </template>
   </button>
 </template>
 
 <script>
 export default {
-  name: "VueButton",
+  name: "vueButton",
 
   data() {
-    const buttonClass = () => {
-      let tempClass = "btn";
-      switch (this.style) {
-        case "standard":
-          tempClass += " btn-primary";
-          break;
-        case "icon":
-          tempClass += " btn-icon";
-          break;
-        case "icon-sm":
-          tempClass += " btn-icon btn-sm";
-          break;
-        case "icon-lg":
-          tempClass += " btn-icon btn-lg";
-          break;
-        case "text":
-          tempClass += " btn-link btn-text";
-          break;
-        case "text-sm":
-          tempClass += " btn-text btn-sm";
-          break;
-        case "text-lg":
-          tempClass += " btn-text btn-lg";
-          break;
-        case "small":
-          tempClass += " btn-primary btn-sm";
-          break;
-        case "large":
-          tempClass += " btn-primary btn-lg";
-          break;
-        case "fullWidth":
-          tempClass += " btn-fullWidth btn-block";
-          break;
-        case "border":
-          tempClass += " btn-border";
-          break;
-        case "border-sm":
-          tempClass += " btn-border btn-sm";
-          break;
-        case "border-lg":
-          tempClass += " btn-border btn-lg";
-          break;
-        case "border-fwidth":
-          tempClass += " btn-border btn-fullWidth btn-block";
-          break;
-        default:
-          tempClass += "";
-      }
-      return tempClass;
-    };
+    const buttonClass = "";
     return {
       buttonClass
     };
   }, //data
+
+  beforeMount() {
+    switch (this.category) {
+      case "standard":
+        this.buttonClass += "btn-primary";
+        break;
+      case "icon":
+        this.buttonClass += "btn-icon";
+        break;
+      case "icon-sm":
+        this.buttonClass += "btn-icon btn-sm";
+        break;
+      case "icon-lg":
+        this.buttonClass += "btn-icon btn-lg";
+        break;
+      case "text":
+        this.buttonClass += "btn-link btn-text";
+        break;
+      case "text-sm":
+        this.buttonClass += "btn-text btn-sm";
+        break;
+      case "text-lg":
+        this.buttonClass += "btn-text btn-lg";
+        break;
+      case "small":
+        this.buttonClass += "btn-sm";
+        break;
+      case "large":
+        this.buttonClass += "btn-lg";
+        break;
+      case "fullWidth":
+        this.buttonClass += "btn-fullWidth btn-block";
+        break;
+      case "border":
+        this.buttonClass += "btn-border";
+        break;
+      case "border-sm":
+        this.buttonClass += "btn-border btn-sm";
+        break;
+      case "border-lg":
+        this.buttonClass += "btn-border btn-lg";
+        break;
+      case "border-fwidth":
+        this.buttonClass += "btn-border btn-fullWidth btn-block";
+        break;
+      default:
+        this.buttonClass += "";
+    }
+  }, //beforeMount
 
   props: {
     type: {
@@ -89,7 +89,7 @@ export default {
       }
     },
 
-    name: {
+    tag: {
       type: [String, null],
       required: false,
       default: null
@@ -98,7 +98,7 @@ export default {
     icon: {
       type: [String, null],
       required: function(props) {
-        return ["icon", "icon-lg", "icon-sm"].indexOf(props.style) !== -1;
+        return ["icon", "icon-lg", "icon-sm"].indexOf(props.category) !== -1;
       },
       default: null
     },
@@ -109,7 +109,7 @@ export default {
       default: null
     },
 
-    style: {
+    category: {
       type: [String, null],
       required: false,
       default: "standard",
@@ -159,8 +159,8 @@ export default {
       type: [String, null],
       required: false,
       default: function(props) {
-        if (props.name) {
-          return props.name;
+        if (props.tag) {
+          return props.tag;
         }
         return "form";
       }
@@ -189,7 +189,7 @@ export default {
 @import (reference) "../Less/customVariables.less";
 @import (reference) "../Less/customMixins.less";
 
-@color: @secondaryColor; // #1B746D;
+@color: @secondaryColor;
 
 .vueButton {
   display: inline-flex;
@@ -197,25 +197,19 @@ export default {
   align-items: center;
   font-weight: bold;
   width: fit-content;
+  background-color: @color;
+  color: @textColor;
+  border: 1px solid @color;
+  height: fit-content;
 
   & > span {
     margin-right: @spaceMd;
   }
 
-  &.btn-sm {
-    padding: @spaceSm @spaceMd;
-    font-size: @fontSizeSm;
-  }
+  .boxShadow(@one);
 
-  &.btn-lg {
-    padding: @spaceMd @spaceLg;
-    font-size: @fontSizeSm * 2;
-  }
-
-  .boxShadow(@three);
-
-  &:hover {
-    .boxShadow(@one);
+  &:not([disabled]):hover {
+    .boxShadow(@base);
   }
   //icon buttons
   &.btn-icon {
@@ -223,15 +217,16 @@ export default {
     color: @color;
     padding: @spaceSm;
     font-size: @fontSize;
+    border-color: transparent;
 
     & > span {
       margin-right: 0;
     }
 
-    .textShadow(@one);
+    .textShadow(@baseText);
 
     &:hover {
-      .textShadow(@base);
+      .textShadow(@oneText);
     }
   }
 
@@ -242,8 +237,8 @@ export default {
     padding: @spaceSm @spaceMd;
     font-weight: bold;
 
-    &:hover {
-      border: 1px solid @color;
+    &:not([disabled]):hover {
+      border-color: transparent;
     }
   }
 
@@ -259,6 +254,16 @@ export default {
   &.fullWidth,
   .btn-fullWidth {
     width: 100%;
+  }
+
+  &.btn-sm {
+    padding: @spaceSm @spaceMd;
+    font-size: @fontSizeSm;
+  }
+
+  &.btn-lg {
+    padding: @spaceMd @spaceLg;
+    font-size: @fontSizeSm * 2;
   }
 }
 </style>

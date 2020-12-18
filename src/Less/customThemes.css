@@ -1,15 +1,14 @@
-
 html {
-    --primaryColor:          #FBCE51;
-    --secondaryColor:        #F1BA45;
-    --CMTeal:                #00B6A8;
+    --primaryColor: #FBCE51;
+    --secondaryColor: #fbce51;
+    --CMTeal: #00B6A8;
 
-    --white:                 #FFFFFF;
-    --offWhite:              #FAFBFC;
+    --white: #FFFFFF;
+    --offWhite: #FAFBFC;
 
     /* dark colors */
-    --black:                 #000000;
-    --offBlack:              #0C090D;
+    --black: #000000;
+    --offBlack: #0C090D;
     /* shades of grey */
     --grayDarker: ~"lighten(--black, 13.5%)";
     --grayDark: ~"lighten(--black, 20%)";
@@ -19,12 +18,13 @@ html {
 }
 
 :root {
-    --textColor:             var(--offBlack);
-    --backgroundColor:       var(--offWhite);
-    --navBackground:         var(--offBlack);
-    --navText:               var(--offWhite);
+    --textColor: var(--offBlack);
+    --backgroundColor: var(--offWhite);
+    --navBackground: var(--offBlack);
+    --navText: var(--offWhite);
     --shadowColor: var(--black);
 }
+
 html[theme='darkMode'] {
     --textColor: var(--offWhite);
     --backgroundColor: var(--offBlack);

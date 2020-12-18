@@ -1,16 +1,22 @@
 // https://github.com/jsbroks/vuex-typescript-todoapp
 <template>
-  <div>
-    <h1>
-      Vue 3 todoApp using typescript and Vuex 4
-    </h1>
-    <div v-if="loading">
-      <h3>
-        Loading...
-      </h3>
-    </div>
-    <div v-else>
-      <add-task />
+  <div class="todoApp">
+    <h2>
+      ToDo App
+    </h2>
+    <p>
+      Plan manage and track all your tasks in one simpel module.
+    </p>
+    <h3 v-if="loading">
+      Loading...
+    </h3>
+    <div v-else class="loaded">
+      <div>
+        <add-task />
+        <span>
+          Completed: <b>{{ completedCount }} / {{ totalCount }}</b>
+        </span>
+      </div>
       <task-list />
     </div>
   </div>
@@ -25,6 +31,8 @@ import { useStore } from "@/store";
 import { ActionTypes } from "@/store/actions";
 
 export default defineComponent({
+  name: "toDoApp",
+
   components: {
     taskList,
     addTask
@@ -43,3 +51,23 @@ export default defineComponent({
   }
 });
 </script>
+<style lang="less">
+.todoApp {
+  display: flex;
+  flex-direction: column;
+  & > .loaded {
+    display: flex;
+    flex-direction: column;
+    & > div {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-evenly;
+      align-content: center;
+      & > span {
+        height: fit-content;
+      }
+    }
+  }
+}
+</style>

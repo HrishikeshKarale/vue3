@@ -1,20 +1,22 @@
 <template>
   <form @submit.prevent="createTask">
-    <input
-      v-once
-      type="text"
-      placeholder="Enter task that needs to be completed..."
-      v-model="task"
+    <text-input
+      :value="task"
+      tag="task"
+      placeholder="Enter Tasks...."
+      :required="booleanTrue"
+      icon="fas fa-clipboard"
+      @alerts="alerts"
+      @input="val => (task = val)"
     />
-    <button @click="createTask">+ ADD TASK</button>
-    <!-- <vue-button
-      name="AddTask"
+    <vue-button
+      tag="AddTask"
       text="Add"
-      icon="fas fa-plus"
       :disabled="!task"
-      style="small"
+      category="small"
+      icon="fas fa-plus"
       :ctx="createTask.bind(this)"
-    /> -->
+    />
   </form>
 </template>
 <script lang="ts">
@@ -23,10 +25,11 @@ import { defineComponent, ref } from "vue";
 import { useStore } from "@/store";
 import { ToDoList } from "@/store/state";
 import { MutationType } from "@/store/mutations";
-// import vueButton from "../vueButton.vue";
+import vueButton from "../vueButton.vue";
+import textInput from "../form/textInput.vue";
 
 export default defineComponent({
-  // components: { vueButton },
+  components: { vueButton, textInput },
 
   setup() {
     const task = ref("");
@@ -48,10 +51,14 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
+@import (reference) "../../Less/customVariables.less";
 form {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 16px 32px;
+  padding: @spaceMd @spaceLg;
+  & > * {
+    margin: @spaceSm;
+  }
 }
 </style>

@@ -63,15 +63,17 @@ export default {
 .inputResponse {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
 
   & > div {
     margin: @spaceSm 0;
     font-size: @fontSizeSm;
-    font-family: monospace;
-    font-weight: 700;
+    // font-family: monospace;
+    font-weight: bold;
+    letter-spacing: 1px !important;
     & > span {
-      margin-right: @spaceMd;
+      margin-right: @spaceSm;
     }
 
     &.infoMessage {
