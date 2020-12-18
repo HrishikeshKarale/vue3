@@ -5,7 +5,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import inputTags from "./inputTags/inputTags.vue";
 
 export default {
@@ -26,7 +26,7 @@ export default {
     };
   }, //data
   methods: {
-    tag: function(val: string) {
+    tag: function(val) {
       if (typeof val !== "object") {
         this.list = [val, ...this.list];
       }

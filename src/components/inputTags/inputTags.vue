@@ -22,10 +22,7 @@
             <span>
               {{ item }}
             </span>
-            <i
-              class="fas fa-times"
-              @click.prevent="removeTag.bind(this, index)"
-            />
+            <i class="fas fa-times" @click.prevent="removeTag(index)" />
           </div>
         </li>
       </template>

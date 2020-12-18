@@ -25,7 +25,9 @@
         :disabled="disabled"
         :autofocus="autofocus"
         :maxlength="maxlength"
-        @blur="validate"
+        v-on:(keyup[0])="validate"
+        v-on:(keyup[1])="validate"
+        @change="validate"
       />
       <datalist :id="tag">
         <option v-for="(option, index) in options" :key="index" :value="option">
@@ -193,6 +195,12 @@ export default {
       required: false,
       type: [String, null],
       default: null
+    },
+
+    keyup: {
+      type: [Array, null],
+      required: false,
+      default: () => ["keyup.tab", "keyup.enter"]
     }
   }, //props
 
