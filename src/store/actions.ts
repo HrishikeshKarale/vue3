@@ -30,7 +30,10 @@ export const actions: ActionTree<State, State> & Actions = {
             {
                 id: 1,
                 todo: "Create an awesome Vue 3 application",
-                completed: false
+                description: "create an awesome todo application that allows its users to store their tasklist and go through them, marking them as complete as they go through their day.",
+                status: true,
+                completed: Date(),
+                tags: ["typescript", "Vuex4", "ref", "reactive", "less"]
             }
         ])
     }

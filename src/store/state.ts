@@ -1,7 +1,10 @@
 export type ToDoList = {
     id: number,
     todo: string,
-    completed: boolean
+    description: string | null,
+    status: boolean,
+    completed: string | null,
+    tags: string[] | null
 };
 
 export type State = {
@@ -11,5 +14,5 @@ export type State = {
 
 export const state: State = {
     loading: false,
-    list:[]
+    list: []
 }

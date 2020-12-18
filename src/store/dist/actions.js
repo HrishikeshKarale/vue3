@@ -60,7 +60,7 @@ exports.actions = (_a = {},
                             {
                                 id: 1,
                                 todo: "Create an awesome Vue 3 application",
-                                completed: false
+                                status: false
                             }
                         ]);
                         return [2 /*return*/];
