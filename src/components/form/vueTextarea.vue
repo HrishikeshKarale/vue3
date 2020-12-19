@@ -40,14 +40,17 @@
 </template>
 
 <script>
-import inputResponse from "@/components/form/inputResponse.vue";
+import inputResponse from "@/components/alert/inputResponse.vue";
+import { validator } from "@/typeScript/validator";
 
 export default {
   name: "VueTextarea", //props
 
   components: {
     inputResponse
-  }, //data
+  }, //components
+
+  mixins: [validator], //mixins
 
   props: {
     //sets heading/Label for the input field
@@ -119,7 +122,6 @@ export default {
       type: [Boolean, null],
       default: false
     },
-
 
     //sets the autocomplete attribute for the input field
     autocomplete: {
