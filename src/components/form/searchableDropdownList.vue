@@ -25,7 +25,7 @@
         :disabled="disabled"
         :autofocus="autofocus"
         :maxlength="maxlength"
-        @blur="validate"
+        @change="validate"
       />
       <datalist :id="tag">
         <option v-for="(option, index) in options" :key="index" :value="option">
