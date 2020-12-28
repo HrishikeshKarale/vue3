@@ -1,17 +1,19 @@
 <template>
   <form
-    :id="form"
+    :id="tag"
     class="vueForm"
-    :ref="form"
-    :name="form"
-    :novalidate="validate"
+    :name="tag"
+    :novalidate="!validate"
     :autocomplete="autocomplete"
     @submit="ctx"
   >
-    <div class="formElements">
-      <slot />
+    <div class="description">
+      <slot name="formDescription" />
     </div>
-    <div class="formButtons">
+    <div class="elements">
+      <slot name="formElements" />
+    </div>
+    <div class="buttons">
       <vue-button
         type="submit"
         tag="submitButton"
@@ -21,31 +23,22 @@
         :disabled="!validInput"
         :ctx="ctx"
       />
-    <!-- <vue-button
-      tag="AddTask"
-      text="Add"
-      :disabled="!task"
-      category="small"
-      icon="fas fa-plus"
-      :ctx="createTask.bind(this)"
-    /> -->
       <input class="btn" type="reset" value="Reset" />
     </div>
   </form>
 </template>
+<script lang="ts">
+import { defineComponent, computed, onMounted } from "vue";
 
-<script>
-import vueButton from "@/components/vueButton";
+import vueButton from "../vueButton.vue";
 
-export default {
-  name: "VueForm", //props
-
+export default defineComponent({
   components: {
     vueButton
-  }, //data
+  }, //components
 
   props: {
-    alerts: {
+    alert: {
       required: true,
       type: Object
     },
@@ -53,41 +46,36 @@ export default {
       required: true,
       type: Function
     },
-    form: {
+    tag: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
     autocomplete: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: true
     },
     validate: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     }
-  },
+  }, //props
 
-  data() {
-    const dWarning = null;
-    const dDanger = null;
+  setup(props) {
+    let formElement = document.getElementById(props.tag);
+    onMounted(() => {
+      formElement = document.getElementById(props.tag);
+    });
 
-    return {
-      dWarning,
-      dDanger
-    };
-  }, //data
-
-  computed: {
-    validInput: function() {
-      const alerts = this.alerts;
-      const form = this.$refs[this.form];
-      if (form && !alerts["error"] && !alerts["warning"]) {
+    //returns true if inputs entered are valid or validate flag set to false
+    const validInput = computed(function() {
+      if (!props.validate) return true;
+      if (formElement && !props.alert["error"] && !props.alert["warning"]) {
         const inputs = [
-          ...Array.from(form.getElementsByTagName("select")),
-          ...Array.from(form.getElementsByTagName("input"))
+          ...Array.from(formElement.getElementsByTagName("select")),
+          ...Array.from(formElement.getElementsByTagName("input"))
         ];
 
         for (let index = 0; index < inputs.length; ++index) {
@@ -102,24 +90,12 @@ export default {
         return true;
       }
       return false;
-    } //validInput
-  }, //mounted
+    });
 
-  methods: {
-    alert: function(type, message) {
-      // console.log(message);
-      if (type == "warning") {
-        this.dWarning = message;
-      } else if (type == "error") {
-        this.dDanger = message;
-      } else {
-        alert("error in input alert module");
-      }
-    } //alerts
-  } //methods
-}; //default
+    return { validInput };
+  }
+}); //default
 </script>
-
 <style lang="less" scoped>
 @import (reference) "../../Less/customMixins.less";
 @import (reference) "../../Less/customVariables.less";
@@ -128,13 +104,16 @@ export default {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  margin: 0 auto;
   & > div {
     display: flex;
-    &.formElements {
+    &.description {
       flex-direction: column;
     }
-    &.formButtons {
+    &.elements {
+      flex-direction: column;
+      align-self: center;
+    }
+    &.buttons {
       flex-direction: row-reverse;
       & > input {
         font-size: @fontSizeMd;

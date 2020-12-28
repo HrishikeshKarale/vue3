@@ -1,13 +1,22 @@
 <template>
   <section :class="{ status: status }">
-    <radio-input
-      :label="todo"
-      :tag="`task-${id}`"
-      :value="status"
-      @selected="val => toggleCompletion(val)"
-      @alerts="alerts"
+    <h3 class="title">
+      {{ todo }}
+    </h3>
+    <small v-if="completed">{{ completed }}</small>
+    <p class="description">
+      {{ description }}
+    </p>
+    {{ tags }}
+    <vue-button
+      tag="completeTask"
+      category="small"
+      :text="`Mark ${!status ? 'Complete' : 'Incomplete'}`"
+      icon="fas fa-tick"
+      :ctx="toggleCompletion.bind(this, !status)"
     />
     <vue-button
+      class="deleteButton"
       tag="deleteTask"
       category="icon-sm"
       icon="fas fa-times"
@@ -20,23 +29,36 @@ import { defineComponent, ref } from "vue";
 
 import { useStore } from "@/store";
 import { MutationType } from "@/store/mutations";
-import radioInput from "../form/radioInput.vue";
 import vueButton from "../vueButton.vue";
 
 export default defineComponent({
-  components: { radioInput, vueButton },
+  components: { vueButton },
   props: {
     id: {
       type: Number,
-      require: true
+      required: true
     },
     todo: {
       type: String,
-      require: true
+      required: true
+    },
+    description: {
+      type: String,
+      required: true
     },
     status: {
       type: Boolean,
-      require: true
+      required: true
+    },
+    completed: {
+      type: String,
+      required: false,
+      default: null
+    },
+    tags: {
+      type: Array,
+      required: false,
+      default: null
     }
   },
 
@@ -48,7 +70,8 @@ export default defineComponent({
       store.commit(MutationType.CompleteItem, {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         id: props.id!,
-        status: status
+        status: status,
+        completed: status ? Date() : null
       });
     };
 
@@ -83,12 +106,13 @@ export default defineComponent({
 @import (reference) "../../Less/customMixins.less";
 section {
   display: flex;
+  flex-direction: column;
   flex-wrap: nowrap;
   justify-content: space-between;
   align-content: center;
   align-self: center;
   margin: @spaceMd @spaceLg;
-  padding: @spaceMd @spaceSm;
+  padding: @spaceLg;
   border: 1px solid @secondaryColor;
   border-radius: @borderRadius;
   width: 480px;
@@ -98,15 +122,23 @@ section {
   &.status {
     .boxShadow(@base, @secondaryColor);
   }
-  & > span {
-    color: red;
-    padding: @spaceMd;
-    cursor: pointer;
+  & > .title {
+    margin-top: 0;
   }
-  & > button {
+  & > .description {
+    padding: @spaceMd @spaceLg;
+  }
+  & > button,
+  & > small {
+    align-self: flex-end;
+  }
+  & > small {
+    color: green;
+  }
+  & > button.deleteButton {
     position: absolute;
-    right: 0;
-    top: 0;
+    right: @spaceSm;
+    top: @spaceSm;
   }
 }
 </style>

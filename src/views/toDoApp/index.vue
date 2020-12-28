@@ -11,13 +11,13 @@
       Loading...
     </h3>
     <div v-else class="loaded">
+      <add-task :title="formTitle" />
       <div>
-        <add-task />
-        <span>
+        <div>
           Completed: <b>{{ completedCount }} / {{ totalCount }}</b>
-        </span>
+        </div>
+        <task-list />
       </div>
-      <task-list />
     </div>
   </div>
 </template>
@@ -38,6 +38,11 @@ export default defineComponent({
     addTask
   },
   setup() {
+    const formTitle = "Create Task";
+
+    const formDecription =
+      "Use this form to create task by filling out the fields below.";
+
     const store = useStore();
 
     const loading = computed(() => store.state.loading);
@@ -47,25 +52,41 @@ export default defineComponent({
     const completedCount = computed(() => store.getters.completedCount);
     const totalCount = computed(() => store.getters.totalCount);
 
-    return { loading, totalCount, completedCount };
+    return { loading, totalCount, completedCount, formTitle, formDecription };
   }
 });
 </script>
 <style lang="less">
+@import (reference) "../../Less/customVariables.less";
+@import (reference) "../../Less/customMixins.less";
 .todoApp {
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
+  align-self: center;
+  text-align: center;
+  max-width: 1504px;
   & > .loaded {
     display: flex;
-    flex-direction: column;
+    text-align: left;
+    position: relative;
+    & > form {
+      position: sticky;
+      top: @spaceXl;
+      max-width: 320px;
+    }
     & > div {
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       flex-wrap: nowrap;
-      justify-content: space-evenly;
-      align-content: center;
-      & > span {
-        height: fit-content;
+      margin-top: @spaceXl;
+      padding: @spaceMd;
+      width: 100%;
+      .scroll(100vh);
+      & > div {
+        &:first-child {
+          align-self: flex-end;
+        }
       }
     }
   }

@@ -1,37 +1,41 @@
 <template>
   <vue-form
     :ctx="createTask.bind(this)"
-    dForm="taskForm"
-    :alerts="{ error: dDanger, warning: dWarning }"
+    tag="Create Task"
+    :alerts="{ error: danger, warning: warning }"
     :validate="!booleanTrue"
-    :autocomplete="booleanTrue"
+    :autocomplete="!booleanTrue"
     @alerts="alerts"
   >
-    <text-input
-      :value="task"
-      tag="task"
-      placeholder="Enter Tasks...."
-      :required="booleanTrue"
-      icon="fas fa-clipboard"
-      @alerts="alerts"
-      @input="val => (task = val)"
-    />
-    <vue-textarea
-      :value="description"
-      tag="task"
-      placeholder="Enter Tasks...."
-      icon="fas fa-clipboard"
-      @alerts="alerts"
-      @input="val => (description = val)"
-    />
-    <!-- <vue-button
-      tag="AddTask"
-      text="Add"
-      :disabled="!task"
-      category="small"
-      icon="fas fa-plus"
-      :ctx="createTask.bind(this)"
-    /> -->
+    <template #formDescription>
+      <h3>
+        {{ title }}
+      </h3>
+      <p v-if="text">
+        {{ text }}
+      </p>
+    </template>
+    <template #formElements>
+      <text-input
+        label="Task"
+        :value="task"
+        tag="task"
+        placeholder="Enter Tasks...."
+        :required="booleanTrue"
+        icon="fas fa-clipboard"
+        @alerts="alerts"
+        @input="val => (task = val)"
+      />
+      <vue-textarea
+        label="Description"
+        :value="description"
+        tag="task"
+        placeholder="Enter Tasks...."
+        icon="fas fa-clipboard"
+        @alerts="alerts"
+        @input="val => (description = val)"
+      />
+    </template>
   </vue-form>
 </template>
 <script lang="ts">
@@ -40,13 +44,23 @@ import { defineComponent, ref, reactive } from "vue";
 import { useStore } from "@/store";
 import { ToDoList } from "@/store/state";
 import { MutationType } from "@/store/mutations";
-// import vueButton from "../vueButton.vue";
 import textInput from "../form/textInput.vue";
 import vueTextarea from "../form/vueTextarea.vue";
 import vueForm from "../form/vueForm.vue";
 
 export default defineComponent({
-  components: { /*vueButton, */textInput, vueTextarea, vueForm },
+  components: { textInput, vueTextarea, vueForm },
+
+  props: {
+    title: {
+      type: String,
+      required: false
+    },
+    text: {
+      type: String,
+      required: false
+    }
+  }, //props
 
   setup() {
     const task = ref("");
@@ -73,14 +87,14 @@ export default defineComponent({
 
     //used to trigger events if component throws an error
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const dWarning = ref("");
+    const warning = ref("");
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const dDanger = ref("");
+    const danger = ref("");
     const alerts = function(type: string, message: string): void {
       if (type == "warning") {
-        dWarning.value = message;
+        warning.value = message;
       } else if (type == "error") {
-        dDanger.value = message;
+        danger.value = message;
       } else {
         alert("error in input alert module");
       }
@@ -92,8 +106,8 @@ export default defineComponent({
       description,
       tags,
       alerts,
-      dWarning,
-      dDanger,
+      warning,
+      danger,
       booleanTrue
     };
   }

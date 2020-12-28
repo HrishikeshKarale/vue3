@@ -25,16 +25,16 @@ export const actions: ActionTree<State, State> & Actions = {
 
         await sleep(1000);
 
-        commit(MutationType.SetLoading, false);
         commit(MutationType.SetItems, [
             {
                 id: 1,
                 todo: "Create an awesome Vue 3 application",
                 description: "create an awesome todo application that allows its users to store their tasklist and go through them, marking them as complete as they go through their day.",
-                status: true,
-                completed: Date(),
+                status: false,
+                completed: null,
                 tags: ["typescript", "Vuex4", "ref", "reactive", "less"]
             }
         ])
+        commit(MutationType.SetLoading, false);
     }
 }
