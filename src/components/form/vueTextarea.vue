@@ -246,7 +246,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import (reference) "../../Less/customMixins.less";
+@import (reference) "../../less/customMixins.less";
 
 .vueTextarea {
   min-width: 160px;

@@ -57,8 +57,8 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-@import (reference) "../../Less/customVariables.less";
-@import (reference) "../../Less/customMixins.less";
+@import (reference) "../../less/customVariables.less";
+@import (reference) "../../less/customMixins.less";
 .todoApp {
   display: flex;
   flex-direction: column;

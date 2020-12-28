@@ -7,7 +7,12 @@
     <p class="description">
       {{ description }}
     </p>
-    {{ tags }}
+    <ul v-if="tags" class="tags">
+      <li v-for="tag in tags" :key="tag">
+        <span class="fas fa-tag" />
+        {{ tag }}
+      </li>
+    </ul>
     <vue-button
       tag="completeTask"
       category="small"
@@ -102,8 +107,8 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-@import (reference) "../../Less/customVariables.less";
-@import (reference) "../../Less/customMixins.less";
+@import (reference) "../../less/customVariables.less";
+@import (reference) "../../less/customMixins.less";
 section {
   display: flex;
   flex-direction: column;
@@ -127,6 +132,23 @@ section {
   }
   & > .description {
     padding: @spaceMd @spaceLg;
+  }
+  & > ul.tags {
+    display: flex;
+    flex-wrap: wrap;
+    & > li {
+      display: flex;
+      flex-wrap: nowrap;
+      padding: 0 @spaceSm;
+      border: 1px solid @secondaryColor;
+      margin: @spaceXs @spaceSm;
+      & > span {
+        align-self: center;
+        padding: @spaceSm;
+        margin-right: @spaceSm;
+        font-size: @fontSizeSm;
+      }
+    }
   }
   & > button,
   & > small {

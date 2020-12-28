@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import (reference) "../../Less/customVariables.less";
+@import (reference) "../../less/customVariables.less";
 
 .inputResponse {
   display: flex;

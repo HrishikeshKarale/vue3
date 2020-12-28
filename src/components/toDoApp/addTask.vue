@@ -114,7 +114,7 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-@import (reference) "../../Less/customVariables.less";
+@import (reference) "../../less/customVariables.less";
 form {
   display: flex;
   flex-direction: row;

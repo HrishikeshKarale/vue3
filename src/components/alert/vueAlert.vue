@@ -184,7 +184,7 @@
 
 <style lang= "less" scoped>
 
-    @import (reference) '../../Less/customVariables.less';
+    @import (reference) '../../less/customVariables.less';
 
     .alert{
         display: flex;

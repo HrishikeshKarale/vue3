@@ -180,8 +180,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import (reference) "./../../Less/customMixins.less";
-@import (reference) "./../../Less/customVariables.less";
+@import (reference) "./../../less/customMixins.less";
+@import (reference) "./../../less/customVariables.less";
 
 @height: 800px;
 @planet: 30em;
