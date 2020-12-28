@@ -25,8 +25,6 @@
         :disabled="disabled"
         :autofocus="autofocus"
         :maxlength="maxlength"
-        v-on:(keyup[0])="validate"
-        v-on:(keyup[1])="validate"
         @change="validate"
       />
       <datalist :id="tag">
