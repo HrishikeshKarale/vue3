@@ -1,9 +1,9 @@
 import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store";
-import '@/less/bootstrap.less'
-import '@/less/fontAwesome/fontawesome.less'
+import App from "@/App.vue";
+import router from "@/router";
+import { store } from "@/store";
+import "@/less/fontAwesome/fontawesome.less";
+import "@/less/bootstrap.less";
 
 createApp(App)
   .use(store)
