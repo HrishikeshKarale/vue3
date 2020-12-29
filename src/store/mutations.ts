@@ -1,5 +1,5 @@
 import { MutationTree } from "vuex";
-import { State, ToDoList } from "./state";
+import { State, ToDoList } from "@/store/state";
 
 export enum MutationType {
     CreateItem = "CREATE_ITEM",

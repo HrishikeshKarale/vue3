@@ -5,7 +5,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "vue";
 import { useStore } from "@/store";
-import task from "./task.vue";
+import task from "@/components/toDoApp/task.vue";
 
 export default defineComponent({
   components: { task },

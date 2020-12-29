@@ -1,6 +1,6 @@
 import { ActionContext, ActionTree } from "vuex";
-import { Mutations, MutationType } from "./mutations";
-import { State } from "./state";
+import { Mutations, MutationType } from "@/store/mutations";
+import { State } from "@/store/state";
 
 export enum ActionTypes {
     GetToDoItems = "GET_List"

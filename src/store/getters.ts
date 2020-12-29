@@ -1,5 +1,5 @@
 import { GetterTree } from "vuex";
-import { State } from "./state"
+import { State } from "@/store/state"
 
 export type Getters = {
 	completedCount(state: State): number,
