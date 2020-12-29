@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 
-import inputTags from "@/components/form/inputTags.vue";
+import inputTags from "@/components/inputTags/inputTags.vue";
 
 export default defineComponent({
   components: {
