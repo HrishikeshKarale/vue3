@@ -35,6 +35,7 @@
         @alerts="alerts"
         @input="val => (description = val)"
       />
+      <input-tags :tags="tags.list" @value="val => (tags.list = val)" />
     </template>
   </vue-form>
 </template>
@@ -44,12 +45,13 @@ import { defineComponent, ref, reactive } from "vue";
 import { useStore } from "@/store";
 import { ToDoList } from "@/store/state";
 import { MutationType } from "@/store/mutations";
-import textInput from "../form/textInput.vue";
-import vueTextarea from "../form/vueTextarea.vue";
-import vueForm from "../form/vueForm.vue";
+import textInput from "@/components/form/textInput.vue";
+import vueTextarea from "@/components/form/vueTextarea.vue";
+import vueForm from "@/components/form/vueForm.vue";
+import inputTags from "@/components/form/inputTags/inputTags.vue";
 
 export default defineComponent({
-  components: { textInput, vueTextarea, vueForm },
+  components: { textInput, vueTextarea, vueForm, inputTags },
 
   props: {
     title: {

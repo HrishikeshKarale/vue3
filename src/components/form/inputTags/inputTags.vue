@@ -3,8 +3,8 @@
 <template>
   <ul class="inputTags" ref="tagElement">
     <li>
+      {{ tag }}
       <searchable-dropdown-list
-        :label="label"
         tag="tagGenerator"
         :options="tags"
         :value="tag"
@@ -27,17 +27,12 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 
-import searchableDropdownList from "../form/searchableDropdownList.vue";
+import searchableDropdownList from "@/components/form/searchableDropdownList.vue";
 
 export default defineComponent({
   components: { searchableDropdownList },
 
   props: {
-    label: {
-      type: String,
-      required: true,
-      default: "Enter Tag(s)"
-    },
     tags: {
       type: Array,
       required: false,
@@ -51,6 +46,7 @@ export default defineComponent({
     const tag = ref("");
     const tagElement = ref(null);
     const booleanTrue = true;
+    const maxlength = 16;
 
     const addTag = (val: string) => {
       console.log("add", props.tags, val);
@@ -101,8 +97,8 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-@import (reference) "../../less/customVariables.less";
-@import (reference) "../../less/customMixins.less";
+@import (reference) "../../../less/customVariables.less";
+@import (reference) "../../../less/customMixins.less";
 ul.inputTags {
   display: flex;
   flex-direction: row;
@@ -110,6 +106,8 @@ ul.inputTags {
   justify-content: flex-start;
   list-style-type: none;
   flex-wrap: wrap;
+  border: 1px solid @secondaryColor;
+  border-radius: @borderRadius;
   height: fit-content;
   min-width: 160px;
   max-width: 320px;
@@ -121,7 +119,7 @@ ul.inputTags {
     font-size: @fontSizeSm;
     border: 1px solid @secondaryColor;
     padding: @spaceSm 0 @spaceSm 0;
-    margin: @spaceSm;
+    margin: @spaceSm ;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;

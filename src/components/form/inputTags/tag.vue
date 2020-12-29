@@ -24,8 +24,8 @@ export default defineComponent({
 });
 </script>
 <style lang="less">
-@import (reference) "../../less/customVariables.less";
-@import (reference) "../../less/customMixins.less";
+@import (reference) "../../../less/customVariables.less";
+@import (reference) "../../../less/customMixins.less";
 .tag {
   border: 1px solid @secondaryColor;
   border-radius: 4px 16px 16px 4px;
