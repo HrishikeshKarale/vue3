@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 "use strict";
 const __awaiter =
   (this && this.__awaiter) ||
@@ -135,6 +136,7 @@ const __generator =
 let _a;
 exports.__esModule = true;
 exports.actions = exports.ActionTypes = void 0;
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const mutation = require("@/store/mutations");
 let ActionTypes;
 (function(ActionTypes) {
