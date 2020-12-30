@@ -45,6 +45,11 @@ export default defineComponent({
       "Marked - Markdown Parser\n\
 ========================\n\
 [Marked] lets you convert [Markdown] into HTML.  Markdown is a simple text format whose goal is to be very easy to read and write, even when not converted to HTML.  This demo page will let you type anything you like and see how it gets converted.  Live.  No more waiting around.\n\n\
+Tags:\n\
+-------------------\n\n\
+1. create and download file\n\
+2. clipboard implementation\n\
+3. npm marked\n\n\
 How To Use The Demo\n\
 -------------------\n\n\
 1. Type in stuff on the left.\n\
@@ -71,17 +76,11 @@ Ready to start writing?  Either start changing stuff on the left or\n\n\
     );
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const marked = require("marked");
-    let timeout = 0;
     const maxlength = 10000;
 
     const markText = computed(() => {
       return marked(textValue.value);
     });
-
-    const debounce = function(func: Function, wait = 1000): void {
-      clearTimeout(timeout);
-      timeout = setTimeout(func, wait);
-    };
 
     const downloadToFile = (
       content: string,
@@ -98,7 +97,7 @@ Ready to start writing?  Either start changing stuff on the left or\n\n\
       URL.revokeObjectURL(a.href);
     };
 
-    return { textValue, markText, debounce, maxlength, downloadToFile };
+    return { textValue, markText, maxlength, downloadToFile };
   }
 });
 </script>
