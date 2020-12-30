@@ -1,21 +1,13 @@
 <template>
   <div class="copyClipboard">
-    <div>
-      <vue-button
-        :type="type"
-        :tag="name"
-        :text="text"
-        :icon="icon"
-        :category="text ? 'small' : 'icon'"
-        :disabled="!booleanTrue"
-        :autofocus="!booleanTrue"
-        :form="form"
-        :ctx="copyToClipboard"
-      />
-    </div>
-    <div>
-      <textarea :id="id" :value="componentCode"></textarea>
-    </div>
+    <vue-button
+      :tag="tag"
+      :text="text"
+      :icon="icon"
+      :category="text ? 'small' : 'icon'"
+      :ctx="copyToClipboard.bind(this)"
+    />
+    <textarea :id="id" :value="copy"></textarea>
   </div>
 </template>
 <script>
@@ -24,19 +16,6 @@ import vueButton from "@/components/vueButton";
 export default {
   name: "vueClipboard",
 
-  data() {
-    const type = "button";
-    const booleanTrue = true;
-    const form = "";
-    const ctx = this.consoleClick;
-    return {
-      type,
-      booleanTrue,
-      form,
-      ctx
-    }; //return
-  }, //data
-
   props: {
     text: {
       required: false,
@@ -44,7 +23,7 @@ export default {
       default: null
     },
 
-    name: {
+    tag: {
       required: false,
       type: String,
       default: "copyToClipboard"
@@ -56,13 +35,16 @@ export default {
       default: "fas fa-copy"
     },
 
-    componentCode: {
+    copy: {
       required: true
     },
 
     id: {
       required: true,
-      type: String
+      type: String,
+      default: () => {
+        alert("vueClipboard: id is a required field");
+      }
     }
   }, //props
 
@@ -83,7 +65,7 @@ export default {
         // const msg = successful ? "successful" : "unsuccessful";
         // alert("code copied!");
         // console.log('copy successfull', tempId)
-        // alert("copied: ", successful)
+        // alert("copied: ", successful);
       } catch (err) {
         alert("Oops, unable to copy");
       }
