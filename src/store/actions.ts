@@ -23,7 +23,7 @@ export const actions: ActionTree<State, State> & Actions = {
     async [ActionTypes.GetToDoItems]({ commit }) {
         commit(MutationType.SetLoading, true);
 
-        await sleep(1000);
+        // await sleep(1000);
 
         commit(MutationType.SetItems, [
             {

@@ -135,7 +135,7 @@ const __generator =
 let _a;
 exports.__esModule = true;
 exports.actions = exports.ActionTypes = void 0;
-const mutations_1 = require("@/store/mutations");
+const mutation = require("@/store/mutations");
 let ActionTypes;
 (function(ActionTypes) {
   ActionTypes["GetToDoItems"] = "GET_List";
@@ -153,12 +153,12 @@ exports.actions =
       return __generator(this, function(_b) {
         switch (_b.label) {
           case 0:
-            commit(mutations_1.MutationType.SetLoading, true);
+            commit(mutation.MutationType.SetLoading, true);
             return [4 /*yield*/, sleep(1000)];
           case 1:
             _b.sent();
-            commit(mutations_1.MutationType.SetLoading, false);
-            commit(mutations_1.MutationType.SetItems, [
+            commit(mutation.MutationType.SetLoading, false);
+            commit(mutation.MutationType.SetItems, [
               {
                 id: 1,
                 todo: "Create an awesome Vue 3 application",

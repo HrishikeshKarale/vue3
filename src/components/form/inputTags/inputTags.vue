@@ -46,7 +46,6 @@ export default defineComponent({
     const tag = ref("");
     const tagElement = ref(null);
     const booleanTrue = true;
-    const maxlength = 16;
 
     const addTag = (val: string) => {
       console.log("add", props.tags, val);
@@ -119,7 +118,7 @@ ul.inputTags {
     font-size: @fontSizeSm;
     border: 1px solid @secondaryColor;
     padding: @spaceSm 0 @spaceSm 0;
-    margin: @spaceSm ;
+    margin: @spaceSm;
     overflow-wrap: break-word;
     word-wrap: break-word;
     hyphens: auto;

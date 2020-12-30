@@ -30,7 +30,7 @@
         <vue-clipboard
           :componentCode="danger"
           name="copyToClipboard"
-          text="buttonText"
+          text="text"
           category="text"
           icon="fas fa-copy"
           id="id"
