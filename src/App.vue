@@ -3,7 +3,8 @@
     <router-link to="/">Home</router-link> |
     <router-link to="/toDoApp">To Do App</router-link> |
     <router-link to="/calendar">Calendar</router-link> |
-    <router-link to="/markdown">Markdown</router-link>
+    <router-link to="/markdown">Markdown</router-link> |
+    <router-link to="/slider">Slider Carousel</router-link>
   </div>
   <router-view />
 </template>
