@@ -1,11 +1,11 @@
 <template>
-  <div id="nav">
+  <nav>
     <router-link to="/">Home</router-link> |
     <router-link to="/toDoApp">To Do App</router-link> |
     <router-link to="/calendar">Calendar</router-link> |
     <router-link to="/markdown">Markdown</router-link> |
     <router-link to="/slider">Slider Carousel</router-link>
-  </div>
+  </nav>
   <router-view />
 </template>
 
@@ -17,7 +17,7 @@
   color: #2c3e50;
 }
 
-#nav {
+nav {
   padding: 30px;
 
   a {
