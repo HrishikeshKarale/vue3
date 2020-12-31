@@ -1,53 +1,52 @@
 <template>
-  <div class="vueModal">
-    <div id="show-modal">
+  <div class="vueModal" v-if="text || showModal">
+    <div id="show-modal" v-if="text || icon">
       <vue-button
-        :tag="'open' + buttonName + 'Modal'"
-        :text="buttonText"
+        tag="toggleModal"
+        :text="text"
         :icon="icon"
         :category="category"
-        :ctx="ctx"
+        :ctx="toggleModal.bind(this)"
       />
     </div>
-    <transition v-if="showModal" name="modal" :show-modal="showModal">
-      <div class="modal-mask">
-        <div class="modal-wrapper">
-          <div class="modal-container">
-            <div v-if="modalTitle" class="modal-header">
-              {{ modalTitle }}
-            </div>
+    <div v-show="showModal" class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <div v-if="modalTitle" class="modal-header">
+            {{ modalTitle }}
+          </div>
 
-            <div class="modal-body">
-              <slot>
-                default body
-              </slot>
-            </div>
+          <div class="modal-body">
+            <slot>
+              default body
+            </slot>
+          </div>
 
-            <div class="modal-footer">
-              <vue-button
-                v-if="ctx"
-                :tag="buttonName"
-                text="CONFIRM"
-                :icon="icon"
-                category="small"
-                :ctx="ctx"
-              />
-              <vue-button
-                tag="closeModal"
-                text="Close"
-                category="icon-sm"
-                :ctx="ctx"
-              />
-            </div>
+          <div class="modal-footer">
+            <vue-button
+              v-if="ctx"
+              tag="confirmModal"
+              text="CONFIRM"
+              icon="fas fa-check"
+              category="small"
+              :ctx="ctx"
+            />
+            <vue-button
+              class="close"
+              tag="closeModal"
+              icon="fas fa-times"
+              category="icon-sm"
+              :ctx="toggleModal.bind(this)"
+            />
           </div>
         </div>
       </div>
-    </transition>
+    </div>
   </div>
 </template>
 
 <script>
-import vueButton from "@/components/vueButton";
+import vueButton from "@/components/button/vueButton.vue";
 
 export default {
   name: "VueModal",
@@ -69,6 +68,12 @@ export default {
       default: null
     },
 
+    category: {
+      required: false,
+      type: [String, null],
+      default: "small"
+    },
+
     tag: {
       required: false,
       type: [String, null],
@@ -78,7 +83,7 @@ export default {
     icon: {
       required: false,
       type: [String, null],
-      default: null
+      default: ""
     },
 
     showModal: {
@@ -92,26 +97,46 @@ export default {
       type: [Function, null],
       default: null
     }
-  } //props
+  }, //props
+
+  mounted() {
+    document.addEventListener("click", this.clickHandler, {
+      capture: false, // top to bottom bubbling/propogation
+      once: false //should work only once
+    });
+    // console.log(this.$router.currentRoute.value.meta.requiresAuth);
+  },
+
+  methods: {
+    toggleModal: function() {
+      return this.$emit("showModal", !this.showModal);
+    },
+
+    clickHandler: function(event) {
+      if (!event.target.closest(".modal-container") && this.showModal) {
+        this.toggleModal();
+      }
+    } //clickHandler
+  }
 };
 </script>
 
 <style lang="less" scoped>
-@import (reference) "./../Less/customMixins.less";
-@import (reference) "./../Less/customVariables.less";
+@import (reference) "../../Less/customMixins.less";
+@import (reference) "../../Less/customVariables.less";
 
 .vueModal {
   display: inline-flex;
-  outline: 9999px solid rgba(0, 0, 0, 0.5);
 
   .modal-mask {
     position: fixed;
     z-index: @modalZ;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     background-color: rgba(0, 0, 0, 0.5);
+    outline: 9999px solid rgba(0, 0, 0, 0.5);
     display: table;
     transition: @transition;
 
@@ -121,14 +146,22 @@ export default {
 
       .modal-container {
         min-width: 320px;
-        max-width: 800px;
-        height: fit-content;
+        max-width: max-content;
+        height: max-content;
         margin: 0px auto;
+        padding: 8px 16px;
         background-color: @backgroundColor;
         border-radius: @borderRadius;
         .boxShadow(@two);
         transition: @transition;
         font-family: Helvetica, Arial, sans-serif;
+        position: relative;
+
+        .close {
+          position: absolute;
+          top: 8px;
+          right: 8px;
+        }
 
         .modal-header {
           color: @backgroundColor;
@@ -142,7 +175,7 @@ export default {
         }
 
         .modal-body {
-          margin: @spaceMd @spaceLg;
+          padding: @spaceMd @spaceLg;
           display: flex;
           flex-direction: row;
           flex-wrap: wrap;
@@ -153,15 +186,6 @@ export default {
           display: flex;
           flex-direction: row-reverse;
           flex-wrap: nowrap;
-
-          & > div {
-            margin: auto 0 auto @spaceXl;
-            justify-content: space-around;
-
-            &:last-child {
-              margin-left: 0px;
-            }
-          }
         }
       }
     }

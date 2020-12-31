@@ -80,7 +80,7 @@
 
 <script>
 import inputResponse from "@/components/alert/inputResponse";
-import vueButton from "@/components/vueButton";
+import vueButton from "@/components/button/vueButton.vue";
 
 export default {
   name: "RadioInput", //watch

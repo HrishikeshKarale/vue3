@@ -13,7 +13,7 @@
     @click.stop.prevent="ctx"
   >
     <span v-if="icon" :class="icon" />
-    <template v-if="!['icon', 'icon-sm', 'icon-lg'].includes(category)">
+    <template v-if="!['icon', 'icon-sm', 'icon-lg'].includes(category) && text">
       {{ text }}
     </template>
   </button>
@@ -190,8 +190,8 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import (reference) "../less/customVariables.less";
-@import (reference) "../less/customMixins.less";
+@import (reference) "../../less/customVariables.less";
+@import (reference) "../../less/customMixins.less";
 
 @color: @secondaryColor;
 
@@ -239,10 +239,14 @@ export default {
     background-color: transparent;
     color: @color;
     padding: @spaceSm @spaceMd;
+    border-width: 0px;
     font-weight: bold;
+    .boxShadow(none);
 
     &:not([disabled]):hover {
       border-color: transparent;
+      .boxShadow(none);
+      transform: scale(1.2);
     }
   }
 

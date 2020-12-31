@@ -34,7 +34,7 @@ import { defineComponent, ref } from "vue";
 
 import { useStore } from "@/store";
 import { MutationType } from "@/store/mutations";
-import vueButton from "../vueButton.vue";
+import vueButton from "@/components/button/vueButton.vue";
 
 export default defineComponent({
   components: { vueButton },

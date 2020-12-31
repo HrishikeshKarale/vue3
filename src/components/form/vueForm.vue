@@ -30,7 +30,7 @@
 <script lang="ts">
 import { defineComponent, computed, onMounted } from "vue";
 
-import vueButton from "../vueButton.vue";
+import vueButton from "@/components/button/vueButton.vue";
 
 export default defineComponent({
   components: {
@@ -39,8 +39,11 @@ export default defineComponent({
 
   props: {
     alert: {
-      required: true,
-      type: Object
+      required: false,
+      type: Object,
+      default: () => {
+        return { error: "", warning: "" };
+      }
     },
     ctx: {
       required: true,
@@ -65,6 +68,7 @@ export default defineComponent({
 
   setup(props) {
     let formElement = document.getElementById(props.tag);
+
     onMounted(() => {
       formElement = document.getElementById(props.tag);
     });

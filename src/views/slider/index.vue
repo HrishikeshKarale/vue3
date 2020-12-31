@@ -9,7 +9,7 @@
         @enter="enter"
         @afterEnter="afterEnter"
       > -->
-        <div v-if="slide == currentSlide" :class="slide" />
+      <div v-if="slide == currentSlide" :class="slide" />
       <!-- </transition> -->
     </template>
     <vue-button
@@ -36,7 +36,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted } from "vue";
-import VueButton from "@/components/vueButton.vue";
+import VueButton from "@/components/button/vueButton.vue";
 
 export default defineComponent({
   components: { VueButton },

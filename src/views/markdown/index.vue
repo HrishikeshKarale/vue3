@@ -28,8 +28,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
-import vueButton from "@/components/vueButton.vue";
-import vueClipboard from "@/components/Code/vueClipboard.vue";
+import vueButton from "@/components/button/vueButton.vue";
+import vueClipboard from "@/components/code/vueClipboard.vue";
 import vueTextarea from "@/components/form/vueTextarea.vue";
 // import marked from "marked";
 
