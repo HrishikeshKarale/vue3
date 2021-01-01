@@ -9,16 +9,16 @@
       </label>
       <div
         :class="{
-          warningContainer: dWarning,
-          errorContainer: dDanger,
-          iconPadding: inputIcon,
+          warningContainer: warning,
+          errorContainer: danger,
+          iconPadding: icon,
           maskField: mask
         }"
       >
-        <span v-if="inputIcon" :class="inputIcon" />
+        <span v-if="icon" :class="icon" />
         <input
           v-if="!mask"
-          v-model="dPasswordValue"
+          v-model="d_value"
           :type="dType"
           :name="name"
           :placeholder="placeholder"
@@ -35,11 +35,11 @@
           :class="['fas', dType != 'text' ? 'fa-eye' : 'fa-eye-slash']"
           @click="peek(1)"
         />
-        <div v-if="dPasswordValue" class="conditions">
+        <div v-if="d_value" class="conditions">
           <div>
             <span
               :class="
-                dPasswordValue.match(/(?=.*[A-Z])(?=.*[0-9])/g)
+                d_value.match(/(?=.*[A-Z])(?=.*[0-9])/g)
                   ? 'fas fa-check'
                   : 'fas fa-times'
               "
@@ -49,9 +49,7 @@
           <div>
             <span
               :class="
-                dPasswordValue.match(/\S{1,}/g)
-                  ? 'fas fa-check'
-                  : 'fas fa-times'
+                d_value.match(/\S{1,}/g) ? 'fas fa-check' : 'fas fa-times'
               "
             />
             No Spaces
@@ -59,9 +57,7 @@
           <div>
             <span
               :class="
-                dPasswordValue.match(/(?=.*[A-Z])/g)
-                  ? 'fas fa-check'
-                  : 'fas fa-times'
+                d_value.match(/(?=.*[A-Z])/g) ? 'fas fa-check' : 'fas fa-times'
               "
             />
             Capital Letter
@@ -69,25 +65,21 @@
           <div>
             <span
               :class="
-                dPasswordValue.match(/(?=.*[a-z])/g)
-                  ? 'fas fa-check'
-                  : 'fas fa-times'
+                d_value.match(/(?=.*[a-z])/g) ? 'fas fa-check' : 'fas fa-times'
               "
             />
             Snall letters
           </div>
           <div>
             <span
-              :class="
-                dPasswordValue.length > 7 ? 'fas fa-check' : 'fas fa-times'
-              "
+              :class="d_value.length > 7 ? 'fas fa-check' : 'fas fa-times'"
             />
             More than 8 characters
           </div>
           <div>
             <span
               :class="
-                dPasswordValue.match(/(?=.*[!@#\\$%\\^&\\*])/g)
+                d_value.match(/(?=.*[!@#\\$%\\^&\\*])/g)
                   ? 'fas fa-check'
                   : 'fas fa-times'
               "
@@ -97,11 +89,9 @@
         </div>
       </div>
       <input-response
-        :warning="dWarning"
-        :error="dDanger"
-        :char-limit-reached="
-          dPasswordValue ? maxlength - dPasswordValue.length < 0 : false
-        "
+        :warning="warning"
+        :error="danger"
+        :char-limit-reached="d_value ? maxlength - d_value.length < 0 : false"
         :maxlength="maxlength"
       />
     </div>
@@ -113,23 +103,23 @@
       </label>
       <div
         :class="{
-          warningContainer: dPasswordValue
+          warningContainer: d_value
             ? dPasswordMatch
-              ? dPasswordValue === dPasswordMatch
+              ? d_value === dPasswordMatch
                 ? null
                 : 'Passwords does not match'
               : null
             : null,
-          errorContainer: dPasswordValue
+          errorContainer: d_value
             ? dPasswordMatch
               ? null
               : 'Required Field'
             : null,
-          iconPadding: inputIcon,
+          iconPadding: icon,
           maskField: mask
         }"
       >
-        <span v-if="inputIcon" :class="inputIcon" />
+        <span v-if="icon" :class="icon" />
         <input
           v-if="!mask"
           v-model="dPasswordMatch"
@@ -140,18 +130,18 @@
           :autofocus="autofocus"
           :disabled="disabled"
           :readonly="readonly"
-          :autocomplete="!dBooleanTrue"
+          :autocomplete="autocomplete"
           @input="validate"
         />
         <span
           :class="['fas', dTypeMatch != 'text' ? 'fa-eye' : 'fa-eye-slash']"
           @click="peek(0)"
         />
-        <div v-if="dPasswordValue" class="conditions">
+        <div v-if="d_value" class="conditions">
           <div>
             <span
               :class="
-                dPasswordValue && dPasswordValue === dPasswordMatch
+                d_value && d_value === dPasswordMatch
                   ? 'fas fa-check'
                   : 'fas fa-times'
               "
@@ -162,17 +152,15 @@
       </div>
       <input-response
         :warning="
-          dPasswordValue
+          d_value
             ? dPasswordMatch
-              ? dPasswordValue === dPasswordMatch
+              ? d_value === dPasswordMatch
                 ? null
                 : 'Passwords does not match'
               : null
             : null
         "
-        :error="
-          dPasswordValue ? (dPasswordMatch ? null : 'Required Field') : null
-        "
+        :error="d_value ? (dPasswordMatch ? null : 'Required Field') : null"
       />
     </div>
   </div>
@@ -181,6 +169,7 @@
 <script>
 import inputResponse from "@/components/alert/inputResponse.vue";
 import { validator } from "@/typeScript/validator";
+import { alerts } from "@/typeScript/alerts";
 
 export default {
   name: "PasswordInput", //props
@@ -189,7 +178,7 @@ export default {
     inputResponse
   }, //components
 
-  mixins: [validator], //mixins
+  mixins: [validator, alerts], //mixins
 
   props: {
     //sets heading/Label for the input field
@@ -217,9 +206,9 @@ export default {
     pattern: {
       required: false,
       type: [RegExp, String, null],
-      default: new RegExp(
-        "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})"
-      )
+      default: () =>
+        // eslint-disable-next-line vue/require-valid-default-prop
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})/
     },
 
     //sets the placeholder attribute for the input field
@@ -237,7 +226,7 @@ export default {
     },
 
     //sets the manual alerts
-    alertMessage: {
+    alert: {
       required: false,
       type: [Object, null],
       default: null
@@ -280,7 +269,7 @@ export default {
 
     //if a valid fontawesome icon class string is passed, it displays it in the input field
     //a valid fontawesome icons class string is a string which starts with fas/far/fab/fa
-    inputIcon: {
+    icon: {
       required: false,
       type: [String, null],
       default: null
@@ -308,88 +297,22 @@ export default {
     }
   }, //props
 
-  emits: ["alerts"], //emits
-
   data() {
-    const dBooleanTrue = true;
-    //stores errors thrown by the input fields
-    const dDanger = undefined;
-    //stores errors thrown by the input fields
-    const dWarning = undefined;
-    //stores textbox password values
-    const dPasswordValue = undefined;
-    //stores textbox password values to match with dPasswordValue
-    const dPasswordMatch = undefined;
+    //stores textbox password values to match with d_value
+    const dPasswordMatch = "";
     //type defaulted to password.
     const dType = "password";
     //type defaulted to password.
     const dTypeMatch = "password";
     return {
-      dDanger,
-      dWarning,
-      dPasswordValue,
       dPasswordMatch,
       dType,
-      dTypeMatch,
-      dBooleanTrue
+      dTypeMatch
     }; //return
   }, //components
 
-  watch: {
-    //send warning messages back to parent component
-    dWarning: function(newValue) {
-      this.$emit("alerts", "warning", newValue);
-    },
-
-    //send error messages back to parent component
-    dDanger: function(newValue) {
-      this.$emit("alerts", "error", newValue);
-    }
-  }, //methods
-
-  created() {
-    //store values passed as props into dPasswordValue for future manipulation
-    if (this.value) {
-      this.dPasswordValue = this.value;
-    }
-  }, //created
-
-  beforeMount() {
-    const alertMessage = this.alertMessage;
-
-    if (this.value) {
-      this.validate();
-    }
-
-    if (alertMessage) {
-      if (alertMessage["error"]) {
-        this.dDanger = alertMessage["error"];
-      } else if (alertMessage["warning"]) {
-        this.dWarning = alertMessage["warning"];
-      } else if (alertMessage["success"]) {
-        this.dSuccess = alertMessage["success"];
-      } else if (alertMessage["info"]) {
-        this.dInfo = alertMessage["info"];
-      }
-    }
-  }, //computed
-
   methods: {
-    //validate the textbox input and set alert messages if required.
-    //it also emits/send the current textbox value to  parent component as v-model attribute value
-    validate: function() {
-      const object = {
-        value: this.dPasswordValue,
-        maxlength: this.maxLength,
-        minlength: this.minLength,
-        pattern: this.pattern
-      };
-      const response = this.validator(object);
-      this.dDanger = response.error;
-      this.dWarning = response.warning;
-    }, //validate
-
-    //
+    //peek into thepassword value
     peek: function(val) {
       if (val === 0) {
         if (this.dTypeMatch === "password") {
@@ -405,16 +328,14 @@ export default {
         }
       }
     } //peek
-  } //watch
+  } //methods
 }; //default
 </script>
 
 <style lang="less" scoped>
 @import (reference) "../../Less/customMixins.less";
-
 .passwordInput {
   min-width: 160px;
-
   & > div {
     .inputcss();
   }

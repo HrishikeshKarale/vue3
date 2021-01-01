@@ -1,0 +1,18 @@
+{
+  "hosting": {
+    "public": "dist",
+    "site": "vue3app",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
+//firebase deploy --only hosting:vue3app

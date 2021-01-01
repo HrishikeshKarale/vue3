@@ -7,8 +7,8 @@
     </label>
     <div
       :class="{
-        warningContainer: dWarning,
-        errorContainer: dDanger,
+        warningContainer: warning,
+        errorContainer: danger,
         iconPadding: icon,
         maskField: mask
       }"
@@ -16,7 +16,7 @@
       <span v-if="icon" :class="icon" />
       <input
         v-if="!mask"
-        v-model="dTextValue"
+        v-model="d_value"
         type="text"
         :name="tag"
         :placeholder="placeholder"
@@ -26,16 +26,15 @@
         :autofocus="autofocus"
         :disabled="disabled"
         :readonly="readonly"
+        :autocomplete="autocomplete"
         :required="required"
         @input="validate"
       />
     </div>
     <input-response
-      :warning="dWarning"
-      :error="dDanger"
-      :char-limit-reached="
-        dTextValue ? maxlength - dTextValue.length <= 0 : false
-      "
+      :warning="warning"
+      :error="danger"
+      :char-limit-reached="d_value ? maxlength - d_value.length <= 0 : false"
       :maxlength="maxlength"
     />
   </div>
@@ -44,15 +43,16 @@
 <script>
 import inputResponse from "@/components/alert/inputResponse.vue";
 import { validator } from "@/typeScript/validator";
+import { alerts } from "@/typeScript/alerts";
 
 export default {
-  name: "textInput",
+  name: "TextInput",
 
   components: {
     inputResponse
   }, //components
 
-  mixins: [validator], //mixins
+  mixins: [validator, alerts], //mixins
 
   props: {
     //sets heading/Label for the input field
@@ -108,7 +108,7 @@ export default {
     },
 
     //sets the manual alerts
-    alertMessage: {
+    alert: {
       required: false,
       type: [Object, null],
       default: null
@@ -170,87 +170,14 @@ export default {
       type: [String, null],
       default: null
     }
-  }, //props
-
-  emits: ["alerts"],
-
-  data() {
-    //stores errors thrown by the input fields
-    const dDanger = null;
-    //stores errors thrown by the input fields
-    const dWarning = null;
-    //stores textbox values
-    const dTextValue = null;
-    return {
-      dDanger,
-      dWarning,
-      dTextValue
-    }; //return
-  }, //data
-
-  watch: {
-    //send warning messages back to parent component
-    dWarning: function(newValue) {
-      this.$emit("alerts", "warning", newValue);
-    },
-
-    //send error messages back to parent component
-    dDanger: function(newValue) {
-      this.$emit("alerts", "error", newValue);
-    }
-  }, //watch
-
-  created() {
-    //store values passed as props into dTextValue for future manipulation
-    if (this.value) {
-      this.dTextValue = this.value;
-    }
-  }, //created
-
-  beforeMount() {
-    const alertMessage = this.alertMessage;
-
-    if (this.value) {
-      this.validate();
-    }
-
-    if (alertMessage) {
-      if (alertMessage["error"]) {
-        this.dDanger = alertMessage["error"];
-      } else if (alertMessage["warning"]) {
-        this.dWarning = alertMessage["warning"];
-      } else if (alertMessage["success"]) {
-        this.dSuccess = alertMessage["success"];
-      } else if (alertMessage["info"]) {
-        this.dInfo = alertMessage["info"];
-      }
-    }
-  },
-
-  methods: {
-    //validate the textbox input and set alert messages if required.
-    //it also emits/send the current textbox value to  parent component as v-model attribute value
-    validate: function() {
-      const object = {
-        value: this.dTextValue,
-        maxlength: this.maxLength,
-        minlength: this.minLength,
-        pattern: this.pattern
-      };
-      const response = this.validator(object);
-      this.dDanger = response.error;
-      this.dWarning = response.warning;
-    } //validate
-  } //methods
+  } //props
 }; //default
 </script>
 
 <style lang="less" scoped>
 @import (reference) "../../less/customMixins.less";
-
 .textInput {
   .inputcss();
-
   /* .placeholder(); */
 }
 </style>

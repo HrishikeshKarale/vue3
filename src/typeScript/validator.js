@@ -1,9 +1,33 @@
 export const validator = {
-  emits: ["input"], //emits
+  emits: ["value"], //emits
+
+  data() {
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const d_value = "";
+    return {
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      d_value
+    };
+  }, //data
+
   methods: {
     initializeValidator: function(pattern) {
       this.pattern = pattern;
     }, //initializeValidator
+
+    //validate the textbox input and set alert messages if required.
+    //it also emits/send the current textbox value to  parent component as v-model attribute value
+    validate: function() {
+      const object = {
+        value: this.d_value,
+        maxlength: this.maxLength,
+        minlength: this.minLength,
+        pattern: this.pattern
+      };
+      const response = this.validator(object);
+      this.dDanger = response.error;
+      this.dWarning = response.warning;
+    }, //validate
 
     validator: function(object) {
       let dDanger = null;
@@ -23,7 +47,7 @@ export const validator = {
           dWarning = this.isTooLong(object.maxlength, object.value);
         } else {
           //emit/send new values to parent component v-model attribute
-          this.$emit("input", object.value);
+          this.$emit("value", object.value);
         }
       }
       //if a value for val(temp) does not exists  and is required, thentrigger error and set error message

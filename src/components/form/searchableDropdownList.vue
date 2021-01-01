@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import inputResponse from "@/components/form/inputResponse";
+import inputResponse from "@/components/alert/inputResponse";
 
 export default {
   name: "SearchableDropdownList",

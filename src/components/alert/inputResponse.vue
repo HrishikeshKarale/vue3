@@ -25,32 +25,32 @@ export default {
 
   props: {
     error: {
-      type: [String, null],
       required: false,
+      type: [String, null],
       default: null
     },
 
     warning: {
-      type: [String, null],
       required: false,
+      type: [String, null],
       default: null
     },
 
     info: {
-      type: [String, null],
       required: false,
+      type: [String, null],
       default: null
     },
 
     charLimitReached: {
-      type: [Boolean, null],
       required: false,
+      type: [Boolean, null],
       default: false
     },
 
     maxlength: {
-      type: [Number, null],
       required: false,
+      type: [Number, null],
       default: null
     }
   } //props
@@ -59,21 +59,20 @@ export default {
 
 <style lang="less" scoped>
 @import (reference) "../../less/customVariables.less";
+@import (reference) "../../less/customMixins.less";
 
 .inputResponse {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: flex-start;
+  flex-wrap: wrap;
 
   & > div {
     margin: @spaceSm 0;
     font-size: @fontSizeSm;
-    // font-family: monospace;
-    font-weight: bold;
-    letter-spacing: 1px !important;
+    font-family: monospace;
+    font-weight: 700;
     & > span {
-      margin-right: @spaceSm;
+      margin-right: @spaceMd;
     }
 
     &.infoMessage {

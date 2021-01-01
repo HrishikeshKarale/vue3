@@ -9,6 +9,7 @@
         <router-link to="/slider">Slider Carousel</router-link>
       </nav>
       <vue-modal
+        v-if="!isLoggedIn"
         :showModal="showModal"
         text="Login"
         icon="fas fa-sign-in-alt"
@@ -27,6 +28,7 @@
                 :value="username"
                 placeholder="JohnDoe123!"
                 :required="booleanTrue"
+                :autofocus="booleanTrue"
                 input-icon="fas fa-at"
                 @value="val => (username = val)"
               />
@@ -44,36 +46,177 @@
           </vue-form>
         </div>
       </vue-modal>
+      <vue-button
+        v-else
+        tag="logout"
+        text="Logout"
+        icon="fas fa-sign-in-alt"
+        category="small"
+        :ctx="handleLogout.bind(this)"
+      />
+      <vue-modal v-if="isLoading" :showModal="isLoading">
+        <div class="loading">
+          <spinner />
+          <h2>Loading</h2>
+        </div>
+      </vue-modal>
     </header>
     <router-view />
   </div>
 </template>
 
 <script lang="ts">
+import { defineComponent, ref, onMounted, reactive, watch } from "vue";
+
 import vueModal from "@/components/modal/vueModal.vue";
+import vueButton from "@/components/button/vueButton.vue";
+import spinner from "@/components/loading/spinner.vue";
 import vueImg from "@/components/image/vueImg.vue";
 import vueForm from "@/components/form/vueForm.vue";
 import textInput from "@/components/form/textInput.vue";
 import passwordInput from "@/components/form/passwordInput.vue";
-import { defineComponent, ref } from "vue";
+
+import firebase from "@/typeScript/utilities/firebase";
 
 export default defineComponent({
-  components: { vueModal, vueImg, textInput, vueForm, passwordInput },
+  components: {
+    vueModal,
+    vueButton,
+    spinner,
+    vueImg,
+    textInput,
+    vueForm,
+    passwordInput
+  },
 
   setup() {
-    const showModal = ref(true);
+    const showModal = ref(false);
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const logo = require("@/assets/logo.svg");
     const username = ref("");
     const password = ref("");
     const booleanTrue = true;
+    const isLoggedIn = ref(!booleanTrue);
+    const isLoading = ref(!booleanTrue);
+    const appUser = reactive({ user: {} });
+    // // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // const firebase = require("@/typeScript/utilities/firebase");
 
-    const handleLogin = () => {
-      showModal.value = !showModal.value;
-      alert("loggedIn");
+    const handleSignup = () => {
+      isLoading.value = true;
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(username.value, password.value)
+        .then((user: object) => {
+          isLoggedIn.value = true;
+          appUser.user = user;
+          // Signed in
+          // ...
+        })
+        .catch((error: object) => {
+          console.error(error);
+          // const errorCode = error.code;
+          // const errorMessage = error.message;
+          // ..
+        })
+        .finally(() => {
+          isLoading.value = false;
+        });
     };
 
-    return { showModal, handleLogin, logo, password, username, booleanTrue };
+    const handleLogout = () => {
+      isLoading.value = true;
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          isLoggedIn.value = false;
+          appUser.user = {};
+        })
+        .catch((error: object) => {
+          console.error(error);
+          // An error happened.
+        })
+        .finally(() => {
+          isLoading.value = false;
+        });
+    };
+
+    const IsAuthenticated = () => {
+      isLoggedIn.value = true;
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          isLoggedIn.value = true;
+          appUser.user = user;
+          // User is signed in, see docs for a list of available properties
+          // https://firebase.google.com/docs/reference/js/firebase.User
+          // var uid = user.uid;
+          // ...
+        } else {
+          isLoggedIn.value = false;
+          appUser.user = {};
+          // User is signed out
+          // ...
+        }
+      });
+    };
+
+    const handleLogin = () => {
+      isLoading.value = true;
+      // using custom token
+      // firebase.auth().signInWithCustomToken(token)
+      //   .then((user) => {
+      //     // Signed in
+      //     // ...
+      //   })
+      //   .catch((error) => {
+      //     var errorCode = error.code;
+      //     var errorMessage = error.message;
+      //     // ...
+      //   });
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(username.value, password.value)
+        .then((user: object) => {
+          isLoggedIn.value = true;
+          appUser.user = user;
+        })
+        .catch((error: object) => {
+          console.error(error);
+          // var errorCode = error.code;
+          // var errorMessage = error.message;
+        })
+        .finally(() => {
+          isLoading.value = false;
+        });
+      // showModal.value = !showModal.value;
+      // alert("loggedIn");
+    };
+
+    watch(isLoggedIn, (newValue, oldValue) => {
+      if (newValue != oldValue) {
+        showModal.value = newValue;
+      }
+    });
+
+    onMounted(() => {
+      IsAuthenticated();
+    }),
+      watch;
+
+    return {
+      showModal,
+      logo,
+      password,
+      username,
+      booleanTrue,
+      handleLogout,
+      handleLogin,
+      IsAuthenticated,
+      handleSignup,
+      isLoading,
+      isLoggedIn
+    };
   }
 });
 </script>
@@ -90,8 +233,11 @@ header {
   flex-wrap: nowrap;
   justify-content: space-between;
   padding: 8px 32px;
+  justify-content: space-between;
+  align-items: center;
 
-  .loginPortal {
+  .loginPortal,
+  .loading {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -102,6 +248,9 @@ header {
     & > h3 {
       align-self: center;
     }
+  }
+  .loading {
+    align-items: center;
   }
 
   & > nav {
@@ -120,9 +269,6 @@ header {
         color: #42b983;
       }
     }
-  }
-  & > div {
-    align-self: center;
   }
 }
 </style>

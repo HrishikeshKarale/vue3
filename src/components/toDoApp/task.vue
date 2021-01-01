@@ -35,9 +35,11 @@ import { defineComponent, ref } from "vue";
 import { useStore } from "@/store";
 import { MutationType } from "@/store/mutations";
 import vueButton from "@/components/button/vueButton.vue";
+import alerts from "@/typeScript/alerts";
 
 export default defineComponent({
   components: { vueButton },
+  mixins: [alerts],
   props: {
     id: {
       type: Number,
@@ -87,20 +89,20 @@ export default defineComponent({
       });
     };
 
-    //used to trigger events if component throws an error
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    let dWarning = null;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    let dDanger = null;
-    const alerts = function(type: string, message: string): void {
-      if (type == "warning") {
-        dWarning = message;
-      } else if (type == "error") {
-        dDanger = message;
-      } else {
-        alert("error in input alert module");
-      }
-    }; //alerts
+    // //used to trigger events if component throws an error
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // let dWarning = "";
+    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    // let dDanger = "";
+    // const alerts = function(type: string, message: string): void {
+    //   if (type == "warning") {
+    //     dWarning = message;
+    //   } else if (type == "error") {
+    //     dDanger = message;
+    //   } else {
+    //     alert("error in input alert module");
+    //   }
+    // }; //alerts
 
     return { toggleCompletion, removeTask, alerts, booleanTrue };
   }
