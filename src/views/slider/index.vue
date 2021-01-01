@@ -35,8 +35,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted, onUnmounted } from "vue";
+import { defineComponent, ref } from "vue";
 import VueButton from "@/components/button/vueButton.vue";
+import repeatFunctionCall from "@/typeScript/utilities/repeatFunctionCall.ts";
 
 export default defineComponent({
   components: { VueButton },
@@ -48,8 +49,6 @@ export default defineComponent({
     const transitionMode = ref("");
     const transitionEnterActiveClass = ref("");
     const prevHeight = ref("");
-    const slideDuration = 2000;
-    let timer = 0;
 
     const nxtSlide = () => {
       const index = slides.value.indexOf(currentSlide.value);
@@ -89,15 +88,11 @@ export default defineComponent({
       element.style.height = "auto";
     }; //afterEnter
 
-    onMounted(() => {
-      timer = setInterval(() => {
-        currentSlide.value = nxtSlide();
-      }, slideDuration);
-    });
+    const goToSlide = function() {
+      currentSlide.value = nxtSlide();
+    };
 
-    onUnmounted(() => {
-      clearInterval(timer);
-    });
+    repeatFunctionCall(goToSlide);
 
     return {
       slides,

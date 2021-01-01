@@ -6,7 +6,8 @@
         | <router-link to="/toDoApp">To Do app</router-link> |
         <router-link to="/calendar">Calendar</router-link> |
         <router-link to="/markdown">Markdown</router-link> |
-        <router-link to="/slider">Slider Carousel</router-link>
+        <router-link to="/slider">Slider Carousel</router-link> |
+        <router-link to="/calculator">Calculator</router-link>
       </nav>
       <vue-modal
         v-if="!isLoggedIn"

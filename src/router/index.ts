@@ -42,6 +42,15 @@ const routes: Array<RouteRecordRaw> = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "slider" */ "../views/slider/index.vue")
+  },
+  {
+    path: "/calculator",
+    name: "calculator",
+    // route level code-splitting
+    // this generates a separate chunk (calculator.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "calculator" */ "../views/calculator/index.vue")
   }
 ];
 
