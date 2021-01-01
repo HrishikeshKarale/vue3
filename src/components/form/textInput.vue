@@ -7,8 +7,8 @@
     </label>
     <div
       :class="{
-        warningContainer: warning,
-        errorContainer: danger,
+        warningContainer: alertObject.warning,
+        errorContainer: alertObject.danger,
         iconPadding: icon,
         maskField: mask
       }"
@@ -16,7 +16,7 @@
       <span v-if="icon" :class="icon" />
       <input
         v-if="!mask"
-        v-model="d_value"
+        v-model="dValue"
         type="text"
         :name="tag"
         :placeholder="placeholder"
@@ -32,27 +32,25 @@
       />
     </div>
     <input-response
-      :warning="warning"
-      :error="danger"
-      :char-limit-reached="d_value ? maxlength - d_value.length <= 0 : false"
+      :warning="alertObject.warning"
+      :error="alertObject.danger"
+      :char-limit-reached="dValue ? maxlength - dValue.length <= 0 : false"
       :maxlength="maxlength"
     />
   </div>
 </template>
 
 <script>
+import { defineComponent, ref, reactive } from "vue";
+
+import validator from "@/typeScript/validator";
+
 import inputResponse from "@/components/alert/inputResponse.vue";
-import { validator } from "@/typeScript/validator";
-import { alerts } from "@/typeScript/alerts";
 
-export default {
-  name: "TextInput",
-
+export default defineComponent({
   components: {
     inputResponse
   }, //components
-
-  mixins: [validator, alerts], //mixins
 
   props: {
     //sets heading/Label for the input field
@@ -83,7 +81,7 @@ export default {
     pattern: {
       required: false,
       type: [RegExp, String, null],
-      default: null
+      default: new RegExp("[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,3}$")
     },
 
     //sets the placeholder attribute for the input field
@@ -111,7 +109,12 @@ export default {
     alert: {
       required: false,
       type: [Object, null],
-      default: null
+      default: () => {
+        return {
+          danger: "",
+          warning: ""
+        };
+      }
     },
 
     //sets the required attribute for the input field
@@ -170,8 +173,25 @@ export default {
       type: [String, null],
       default: null
     }
-  } //props
-}; //default
+  }, //props
+
+  setup(props, { emit }) {
+    const dValue = ref("");
+    const alertObject = reactive({
+      warning: props.alert ? props.alert.warning : "",
+      danger: props.alert ? props.alert.danger : ""
+    });
+    const { validate } = validator(props, emit, dValue);
+
+    // watch(dValue, (newValue, oldValue) => {
+    //   if (newValue != oldValue) {
+    //     console.log("watch", newValue);
+    //     validator(props, emit, newValue);
+    //   }
+    // });
+    return { alertObject, dValue, validate };
+  }
+});
 </script>
 
 <style lang="less" scoped>
