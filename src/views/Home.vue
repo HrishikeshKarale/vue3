@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <vue-img alt="Vue logo" :src="logo" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <HelloWorld msg="Welcome to My Vue3 Practice App portal" />
   </div>
 </template>
 
@@ -27,8 +27,14 @@ export default class Home extends Vue {
 }
 </script>
 
-<style lang="less">
-img {
-  height: 480px;
+<style lang="less" scoped>
+.home {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin: auto;
+  & > img {
+    height: 240px;
+  }
 }
 </style>

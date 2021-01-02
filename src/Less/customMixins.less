@@ -534,7 +534,7 @@
         &+select,
         &+input,
         &+textarea {
-          padding: @spaceMd 2*@spaceLg;
+          padding: @spaceMd @spaceLg @spaceMd 2*@spaceLg;
           border-top-left-radius: 0px;
           border-bottom-left-radius: 0px;
           border-left-width: 0px;
@@ -549,7 +549,7 @@
           //password peak functionality
           &+span {
             cursor: pointer;
-            left: calc(100% - 3*@spaceMd);
+            left: calc(100% + @spaceMd);
           }
 
           .condition();
