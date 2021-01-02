@@ -10,57 +10,65 @@ export default function validator(props, emit, dValue) {
 
   //value present
   const isTooShort = function () {
-    if (props.minlength > dValue.value.length) {
-      return (
-        "Invalid Input: Allowed minlength for input is " +
-        props.minlength +
-        " characters."
-      );
+    if (props.minlength) {
+      let msg = "";
+      if (props.minlength > dValue.value.length) {
+        msg = "Invalid Input: Allowed minlength for input is " +
+          props.minlength +
+          " characters.";
+      }
+      emit("notify", "warning", msg);
+      return msg;
     }
-    return "";
+    return false;
   }; //isTooShort
 
   const isTooLong = () => {
-    if (props.maxlength < dValue.value.length) {
-      return (
-        "Invalid Input: Allowed maxlength for input exceeded by " +
-        (props.maxlength.length - dValue.value.length) +
-        " characters."
-      );
+    if (props.maxlength) {
+      let msg = "";
+      if (props.maxlength < dValue.value.length) {
+        msg = "Invalid Input: Allowed maxlength for input exceeded by " +
+          (props.maxlength.length - dValue.value.length) +
+          " characters.";
+      }
+      emit("notify", "warning", msg);
+      return msg;
     }
-    return "";
+    return false;
   }; //isTooLong
 
   //pattern matching
   const followsPattern = () => {
-    if (!props.pattern.test(dValue.value)) {
-      return "Wrong email format: Please follow the pattern " + props.pattern;
+    if (props.pattern) {
+      let msg = "";
+      if (!props.pattern.test(dValue.value)) {
+        msg = "Wrong email format: Please follow the pattern " + props.pattern;
+      }
+      emit("notify", "warning", msg);
+      return msg;
     }
-    return "";
+    return false;
   }; //followsPattern
 
   const validate = function () {
     //if value for val(temp) exists check for warning triggers
     if (dValue.value) {
-      //if a patters for acceptable value exists, then trigger warning and set warning message if val (temp) does not follow the patter
-      if (props.pattern && followsPattern()) {
-        emit("notify", 'warning', followsPattern());
-      } else if (props.minlength && isTooShort()) {
-        emit("notify", 'warning', isTooShort());
-      } else if (props.maxlength && isTooLong()) {
-        emit("notify", 'warning', isTooLong());
+
+      //if any of the check fails then an error message is emited as notify and 
+      if (isTooShort()) {
+        //automatically notifies the parent component/host about the error
+      } else if (isTooLong()) {
+        //automatically notifies the parent component/host about the error
       } else {
         //emit/send new values to parent component v-model attribute
-        console.log("value", dValue.value, isRequired());
-        emit("notify", 'danger', "");
-        emit("notify", 'warning', "");
         emit("value", dValue.value);
+        emit("notify", "danger", "");
       }
     }
     //if a value for val(temp) does not exists  and is required, thentrigger error and set error message
     else {
-      emit("notify", 'danger', isRequired());
+      emit("notify", "danger", isRequired());
     }
   }; //validator
-  return { validate };
+  return { validate, followsPattern };
 };

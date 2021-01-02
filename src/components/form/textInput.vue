@@ -7,8 +7,8 @@
     </label>
     <div
       :class="{
-        warningContainer: alertObject.warning,
-        errorContainer: alertObject.danger,
+        warningContainer: alert ? alert.warning : false,
+        errorContainer: alert ? alert.danger : false,
         iconPadding: icon,
         maskField: mask
       }"
@@ -29,11 +29,12 @@
         :autocomplete="autocomplete"
         :required="required"
         @input="validate"
+        @blur="followsPattern"
       />
     </div>
     <input-response
-      :warning="alertObject.warning"
-      :error="alertObject.danger"
+      :warning="alert.warning"
+      :error="alert.danger"
       :char-limit-reached="dValue ? maxlength - dValue.length <= 0 : false"
       :maxlength="maxlength"
     />
@@ -181,15 +182,8 @@ export default defineComponent({
       warning: props.alert ? props.alert.warning : "",
       danger: props.alert ? props.alert.danger : ""
     });
-    const { validate } = validator(props, emit, dValue);
-
-    // watch(dValue, (newValue, oldValue) => {
-    //   if (newValue != oldValue) {
-    //     console.log("watch", newValue);
-    //     validator(props, emit, newValue);
-    //   }
-    // });
-    return { alertObject, dValue, validate };
+    const { validate, followsPattern } = validator(props, emit, dValue);
+    return { alertObject, dValue, validate, followsPattern };
   }
 });
 </script>
@@ -197,6 +191,7 @@ export default defineComponent({
 <style lang="less" scoped>
 @import (reference) "../../less/customMixins.less";
 .textInput {
+  min-width: 160px;
   .inputcss();
   /* .placeholder(); */
 }
