@@ -32,8 +32,8 @@
     <input-response
       :warning="alert ? alert.warning : false"
       :error="alert ? alert.error : false"
-      :char-limit-reached="dValue ? maxlength - dValue.length <= 0 : false"
-      :maxlength="maxlength"
+      :info="alert ? alert.info : dValue ? maxlength - dValue.length < 0 : ''"
+      :success="alert ? alert.success : false"
     />
   </div>
 </template>

@@ -28,7 +28,7 @@
           {{ hideDetails ? "View" : "Hide" }} Details</span
         >
         <vue-clipboard
-          :componentCode="danger"
+          :componentCode="error"
           name="copyToClipboard"
           text="text"
           category="text"
@@ -92,7 +92,7 @@ export default {
   data() {
     const hideDetails = true;
 
-    const danger =
+    const error =
       "error=\n\
             {\n\
                 app: " +
@@ -131,7 +131,7 @@ export default {
 
     return {
       hideDetails,
-      danger,
+      error,
       errorObject
     }; //return
   }, //data

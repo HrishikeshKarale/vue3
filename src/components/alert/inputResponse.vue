@@ -1,21 +1,20 @@
 <template>
   <div class="inputResponse">
-    <div v-if="error" class="errorMessage">
-      <span class="fas fa-exclamation-circle" />
+    <span v-if="error" class="errorMessage fas fa-exclamation-circle">
       <b>{{ error }}</b>
-    </div>
-    <div v-else-if="warning" class="warningMessage">
-      <span class="fas fa-exclamation-triangle" />
+    </span>
+    <span
+      v-else-if="warning"
+      class="warningMessage fas fa-exclamation-triangle"
+    >
       <b>{{ warning }}</b>
-    </div>
-    <div v-else-if="info" class="infoMessage">
-      <span class="fas fa-info-circle" />
+    </span>
+    <span v-else-if="info" class="infoMessage fas fa-info-circle">
       <b>{{ info }}</b>
-    </div>
-    <div v-else-if="charLimitReached" class="infoMessage">
-      <span class="fas fa-info-circle" />
-      Character limit of {{ maxlength }} reached
-    </div>
+    </span>
+    <span v-else-if="success" class="successMessage fas fa-check-circle">
+      <b>{{ info }}</b>
+    </span>
   </div>
 </template>
 
@@ -26,32 +25,26 @@ export default {
   props: {
     error: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
     warning: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
     info: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
-    charLimitReached: {
+    success: {
       required: false,
-      type: [Boolean, null],
-      default: false
-    },
-
-    maxlength: {
-      required: false,
-      type: [Number, null],
-      default: null
+      type: String,
+      default: ""
     }
   } //props
 }; //default
@@ -75,6 +68,10 @@ export default {
       margin-right: @spaceMd;
     }
 
+    &.successMessage {
+      color: @successText;
+    }
+
     &.infoMessage {
       color: @infoText;
     }
@@ -84,7 +81,7 @@ export default {
     }
 
     &.errorMessage {
-      color: @dangerText;
+      color: @errorText;
     }
   }
 }

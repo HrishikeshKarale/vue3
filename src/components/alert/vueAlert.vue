@@ -5,7 +5,7 @@
       <div :class="type">
         <div class="message">
           <h5>
-            <b>{{ type == "danger" ? code + " - " : "" }} {{ message }}</b>
+            <b>{{ type == "error" ? code + " - " : "" }} {{ message }}</b>
           </h5>
           <p>
             {{ description }}
@@ -49,11 +49,11 @@ export default {
       type: String,
       default: "info",
       validator: function(value) {
-        if (["info", "success", "warning", "danger"].includes(value)) {
+        if (["info", "success", "warning", "error"].includes(value)) {
           return true;
         } else {
           alert(
-            "Invalid prop value found in <vue-alert>.\nPossible values: [info, success, warning, danger]\nYou Entered: " +
+            "Invalid prop value found in <vue-alert>.\nPossible values: [info, success, warning, error]\nYou Entered: " +
               value
           );
         }
@@ -62,7 +62,7 @@ export default {
 
     code: {
       required: function() {
-        if (type == "danger") {
+        if (type == "error") {
           return true;
         }
         return false;
@@ -91,7 +91,7 @@ export default {
     timeout: {
       required: false,
       type: Number,
-      default: null
+      default: 0
     }
   }, //props
 
@@ -102,7 +102,7 @@ export default {
 
     closeAlert: function() {
       document
-        .getElementsByClassName("dangerAlert")
+        .getElementsByClassName("errorAlert")
         .fadeTo(5000, 0)
         .slideUp(500, function() {
           $(this).remove();
@@ -121,7 +121,7 @@ export default {
       case "success":
         this.d_alertIcon = "fas fa-check-circle";
         break;
-      case "danger":
+      case "error":
         this.d_alertIcon = "fas fa-exclamation-circle";
         break;
     }
@@ -151,12 +151,12 @@ export default {
   border-left-width: 8px;
   padding: @spaceSm @spaceMd;
 
-  &.danger {
-    border-color: @dangerText;
+  &.error {
+    border-color: @errorText;
 
     h5,
     span {
-      color: @dangerText;
+      color: @errorText;
     }
   }
   &.warning {

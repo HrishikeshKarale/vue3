@@ -154,20 +154,20 @@
 }
 
 .inputError () {
-  border-color: @dangerText;
-  background-color: @dangerBackground;
+  border-color: @errorText;
+  background-color: @errorBackground;
 
   &:focus-within,
   &:focus {
     border-color: @secondaryColor;
 
     &>span {
-      color: @dangerText ;
+      color: @errorText ;
     }
   }
 
   &>span {
-    color: @dangerText  !important;
+    color: @errorText  !important;
   }
 }
 
@@ -203,7 +203,7 @@
 
     &>abbr {
       padding: @spaceSm;
-      color: @dangerText;
+      color: @errorText;
       font-weight: bold;
       text-decoration: none;
     }
@@ -254,7 +254,7 @@
       }
 
       &.errorLabel {
-        color: @dangerText;
+        color: @errorText;
       }
     }
   }
@@ -379,7 +379,7 @@
       }
 
       &.error {
-        color: @dangerText
+        color: @errorText
       }
 
       &.warning {
@@ -684,7 +684,7 @@
       }
 
       &.errorLabel {
-        color: @dangerText;
+        color: @errorText;
       }
     }
   }
@@ -728,7 +728,7 @@
       }
 
       &.errorLabel {
-        color: @dangerText;
+        color: @errorText;
       }
     }
   }

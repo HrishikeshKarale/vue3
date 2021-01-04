@@ -36,7 +36,7 @@
       :class="{
         box: box,
         warningContainer: dWarning,
-        errorContainer: dDanger,
+        errorContainer: dError,
         maskField: mask,
         inline: inline
       }"
@@ -46,7 +46,7 @@
           v-for="(option, index) in options"
           :key="index"
           :class="{
-            errorLabel: dDanger,
+            errorLabel: dError,
             checked:
               value && type == 'checkbox'
                 ? value.includes(option)
@@ -74,7 +74,12 @@
         </label>
       </template>
     </div>
-    <input-response :error="dDanger" />
+    <input-response
+      :warning="alert ? alert.warning : false"
+      :error="alert ? alert.error : false"
+      :info="alert ? alert.info : dValue ? maxlength - dValue.length < 0 : ''"
+      :success="alert ? alert.success : false"
+    />
   </div>
 </template>
 
@@ -95,7 +100,7 @@ export default {
     //valid values include ['checkbox', 'radio']
     type: {
       required: false,
-      type: [String, null],
+      type: String,
       validator: function(value) {
         return ["checkbox", "radio"].indexOf(value) !== -1;
       },
@@ -106,14 +111,14 @@ export default {
     //in case of single/no-option checkbox, label is used as checkbox text
     label: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
     //sets the tag attribute for the input field (required field in case of forms)
     tag: {
       required: false,
-      type: [String, null],
+      type: String,
       default: "radioInput"
     },
 
@@ -125,7 +130,7 @@ export default {
       //   if (!props.options) {
       //     return [Boolean, null];
       //   } else if (props.type != "radio") {
-      //     return [Array, null];
+      //     return Array,;
       //   } else {
       //     //type == radio
       //     return [String, Number, null];
@@ -146,56 +151,58 @@ export default {
     //Array of options/labels in case of multiple checkboxes.
     options: {
       required: false,
-      type: [Array, null],
-      default: null
+      type: Array,
+      default: () => []
     },
 
     //sets the manual alerts
     alertMessage: {
       required: false,
-      type: [Object, null],
-      default: null
+      type: Object,
+      default: () => {
+        return {};
+      }
     },
 
     //sets the required attribute for the input field
     required: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //sets the disabled attribute for the input field
     disabled: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //sets the autofocus attribute for the input field
     autofocus: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //checks if label options should appear on the same line or not
     inline: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //reserves space and created a mask if set to true
     mask: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //checks if label options should appear on the same line or as buttons
     box: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     }
   }, //methods
@@ -203,13 +210,13 @@ export default {
   emits: ["selected"],
 
   data() {
-    const dDanger = null;
+    const dError = null;
     const dWarning = null;
     const dSuccess = null;
     const dInfo = null;
     return {
       //stores errors thrown by the input fields
-      dDanger: dDanger,
+      dError: dError,
       dWarning: dWarning,
       dSuccess: dSuccess,
       dInfo: dInfo
@@ -221,7 +228,7 @@ export default {
 
     if (alertMessage) {
       if (alertMessage["error"]) {
-        this.dDanger = alertMessage["error"];
+        this.dError = alertMessage["error"];
       } else if (alertMessage["warning"]) {
         this.dWarning = alertMessage["warning"];
       } else if (alertMessage["success"]) {

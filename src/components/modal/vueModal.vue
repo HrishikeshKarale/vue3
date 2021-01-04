@@ -58,43 +58,43 @@ export default {
   props: {
     modalTitle: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
     text: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
     category: {
       required: false,
-      type: [String, null],
+      type: String,
       default: "small"
     },
 
     tag: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
     icon: {
       required: false,
-      type: [String, null],
+      type: String,
       default: ""
     },
 
     showModal: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     ctx: {
       required: false,
-      type: [Function, null],
+      type: Function,
       default: null
     }
   }, //props

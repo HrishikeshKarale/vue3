@@ -54,20 +54,21 @@ export default function validator(props, emit, dValue) {
     //if value for val(temp) exists check for warning triggers
     if (dValue.value) {
 
-      //if any of the check fails then an error message is emited as notify and 
+      //if any of the check fails then an error message is emited as notify and
       if (isTooShort()) {
         //automatically notifies the parent component/host about the error
       } else if (isTooLong()) {
         //automatically notifies the parent component/host about the error
       } else {
         //emit/send new values to parent component v-model attribute
+        emit("notify", "error", "");
         emit("value", dValue.value);
-        emit("notify", "danger", "");
       }
     }
     //if a value for val(temp) does not exists  and is required, thentrigger error and set error message
     else {
-      emit("notify", "danger", isRequired());
+      emit("value", "");
+      emit("notify", "error", isRequired());
     }
   }; //validator
   return { validate, followsPattern };

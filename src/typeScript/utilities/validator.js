@@ -25,12 +25,12 @@ export const validator = {
         pattern: this.pattern
       };
       const response = this.validator(object);
-      this.dDanger = response.error;
+      this.dError = response.error;
       this.dWarning = response.warning;
     }, //validate
 
     validator: function(object) {
-      let dDanger = null;
+      let dError = null;
       let dWarning = null;
 
       //if value for val(temp) exists check for warning triggers
@@ -52,10 +52,10 @@ export const validator = {
       }
       //if a value for val(temp) does not exists  and is required, thentrigger error and set error message
       else {
-        dDanger = this.isRequired();
+        dError = this.isRequired();
       }
 
-      return { warning: dWarning, error: dDanger };
+      return { warning: dWarning, error: dError };
     }, //validator
 
     //value ebsent

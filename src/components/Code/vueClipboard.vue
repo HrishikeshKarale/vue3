@@ -20,7 +20,7 @@ export default {
     text: {
       required: false,
       type: String,
-      default: null
+      default: ""
     },
 
     tag: {

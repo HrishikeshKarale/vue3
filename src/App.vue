@@ -27,10 +27,12 @@
                 label="User name"
                 name="textTextField"
                 :value="username"
+                :alert="alertObject"
                 placeholder="JohnDoe123!"
                 :required="booleanTrue"
                 :autofocus="booleanTrue"
-                input-icon="fas fa-at"
+                icon="fas fa-at"
+                @notify="notify"
                 @value="val => (username = val)"
               />
               <password-input
@@ -39,7 +41,7 @@
                 name="usernameTextField"
                 placeholder="*************"
                 :required="booleanTrue"
-                input-icon="far fa-user"
+                icon="far fa-user"
                 :autocomplete="booleanTrue"
                 @value="val => (password = val)"
               />
@@ -100,8 +102,18 @@ export default defineComponent({
     const isLoggedIn = ref(!booleanTrue);
     const isLoading = ref(!booleanTrue);
     const appUser = reactive({ user: {} });
-    // // eslint-disable-next-line @typescript-eslint/no-var-requires
-    // const firebase = require("@/typeScript/utilities/firebase");
+    const alertObject = reactive({
+      warning: "",
+      error: ""
+    });
+
+    const notify = (type, message: string): void => {
+      if (type === "error") {
+        alertObject.error = message;
+      } else {
+        alertObject.warning = message;
+      }
+    };
 
     const handleSignup = () => {
       isLoading.value = true;
@@ -163,6 +175,7 @@ export default defineComponent({
     };
 
     const handleLogin = () => {
+      console.log("app", username.value, password.value);
       isLoading.value = true;
       // using custom token
       // firebase.auth().signInWithCustomToken(token)
@@ -202,8 +215,7 @@ export default defineComponent({
 
     onMounted(() => {
       IsAuthenticated();
-    }),
-      watch;
+    });
 
     return {
       showModal,
@@ -216,6 +228,8 @@ export default defineComponent({
       IsAuthenticated,
       handleSignup,
       isLoading,
+      notify,
+      alertObject,
       isLoggedIn
     };
   }

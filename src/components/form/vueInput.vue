@@ -1,6 +1,6 @@
 //https://markus.oberlehner.net/blog/replicating-the-twitter-tweet-box-with-vue/
 <template>
-  <div class="passwordInput">
+  <div class="vueInput">
     <div :class="{ inline: inline }">
       <label v-if="label" :class="{ maskField: mask }">
         {{ label }}
@@ -33,10 +33,11 @@
           @blur="followsPattern"
         />
         <span
+          v-if="type === 'passowrd'"
           :class="['fas', dType != 'text' ? 'fa-eye' : 'fa-eye-slash']"
           @click="peek(1)"
         />
-        <div v-if="dValue" class="conditions">
+        <!-- <div v-if="dValue" class="conditions">
           <div>
             <span
               :class="
@@ -85,7 +86,7 @@
             />
             Special character
           </div>
-        </div>
+        </div> -->
       </div>
       <input-response
         :warning="alert ? alert.warning : false"
@@ -94,7 +95,7 @@
         :success="alert ? alert.success : false"
       />
     </div>
-    <div v-if="valueMatch" :class="{ inline: inline }">
+    <div v-if="valueMatch && type === 'passowrd'" :class="{ inline: inline }">
       <label v-if="label" :class="{ maskField: mask }">
         Confirm {{ label }}
         <abbr v-if="required" title="Required Field">*</abbr>
@@ -133,10 +134,11 @@
           @input="validate"
         />
         <span
+          v-if="type === 'password'"
           :class="['fas', dTypeMatch != 'text' ? 'fa-eye' : 'fa-eye-slash']"
           @click="peek(0)"
         />
-        <div v-if="dValue" class="conditions">
+        <!-- <div v-if="dValue" class="conditions">
           <div>
             <span
               :class="
@@ -147,7 +149,7 @@
             />
             {{ label }} Match
           </div>
-        </div>
+        </div> -->
       </div>
       <input-response
         :warning="
@@ -187,11 +189,38 @@ export default defineComponent({
       default: ""
     },
 
+    //sets type attribute for the input field.
+    type: {
+      required: true,
+      type: String,
+      validator: function(value) {
+        return (
+          [
+            "text",
+            "password",
+            "email",
+            "number",
+            "month",
+            "image",
+            "range",
+            "week",
+            "url",
+            "tel",
+            "time",
+            "search",
+            "datetime-local",
+            "file",
+            "hidden"
+          ].indexOf(value) !== -1
+        );
+      }
+    },
+
     //sets name attribute for the input field (required field in case of forms)
     name: {
       required: false,
       type: String,
-      default: "passwordInput"
+      default: "vueInput"
     },
 
     //users can pass preset values for the input field
@@ -204,7 +233,7 @@ export default defineComponent({
     //sets the format/pattern for acceptable values for the input field
     pattern: {
       required: false,
-      type: [RegExp, String],
+      type: [RegExp, String, null],
       default: () =>
         // eslint-disable-next-line vue/require-valid-default-prop
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{8,})/
@@ -303,27 +332,33 @@ export default defineComponent({
 
   setup(props, { emit }) {
     const dValue = ref("");
-    //stores textbox password values to match with dValue
-    const valueMatch = ref("");
     //type defaulted to password.
-    const dType = ref("password");
-    //type defaulted to password.
-    const dTypeMatch = ref("password");
+    const dType = ref(props.type);
     const alertObject = reactive({
       warning: props.alert ? props.alert.warning : "",
       error: props.alert ? props.alert.error : ""
     });
+
     const { validate, followsPattern } = validator(props, emit, dValue);
 
+    //stores textbox password values to match with dValue
+    const valueMatch = props.type === "password" ? ref("") : null;
+    //type defaulted to password.
+    const dTypeMatch = props.type === "password" ? ref("password") : null;
     //peek into thepassword value
-    const peek = val => {
-      if (val === 0) {
-        dTypeMatch.value =
-          dTypeMatch.value === "password" ? "text" : "password";
-      } else if (val === 1) {
-        dType.value = dType.value === "password" ? "text" : "password";
-      }
-    }; //peek
+    const peek =
+      props.type === "password"
+        ? val => {
+            if (val === 0) {
+              dTypeMatch.value =
+                dTypeMatch.value === "password" ? "text" : "password";
+            } else if (val === 1) {
+              dType.value = dType.value === "password" ? "text" : "password";
+            }
+          }
+        : val => {
+            /*do nothing*/
+          };
 
     return {
       alertObject,
@@ -341,9 +376,10 @@ export default defineComponent({
 
 <style lang="less" scoped>
 @import (reference) "../../Less/customMixins.less";
-.passwordInput {
-  min-width: 160px;
+.vueInput {
+  width: fit-content;
   & > div {
+    min-width: 160px;
     .inputcss();
   }
 }

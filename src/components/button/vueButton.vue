@@ -81,7 +81,7 @@ export default {
 
   props: {
     type: {
-      type: [String, null],
+      type: String,
       required: false,
       default: "button",
       validator: function(value) {
@@ -90,27 +90,27 @@ export default {
     },
 
     tag: {
-      type: [String, null],
+      type: String,
       required: false,
-      default: null
+      default: ""
     },
 
     icon: {
-      type: [String, null],
+      type: String,
       required: function(props) {
         return ["icon", "icon-lg", "icon-sm"].indexOf(props.category) !== -1;
       },
-      default: null
+      default: ""
     },
 
     text: {
-      type: [String, null],
+      type: String,
       required: false,
-      default: null
+      default: ""
     },
 
     category: {
-      type: [String, null],
+      type: String,
       required: false,
       default: "standard",
       validator: function(value) {
@@ -137,26 +137,26 @@ export default {
     },
 
     disabled: {
-      type: [Boolean, null],
+      type: Boolean,
       required: false,
       default: false
     },
 
     autofocus: {
-      type: [Boolean, null],
+      type: Boolean,
       required: false,
       default: false
     },
 
     //sets the autocomplete attribute for the input field
     autocomplete: {
-      type: [Boolean, null],
+      type: Boolean,
       required: false,
       default: true
     },
 
     form: {
-      type: [String, null],
+      type: String,
       required: false,
       default: function(props) {
         if (props.tag) {
@@ -167,7 +167,7 @@ export default {
     },
 
     ctx: {
-      type: [Function, null],
+      type: Function,
       required: function(props) {
         // console.log(props.type);
         if (props.type != "button") {

@@ -17,12 +17,12 @@ export default {
     src: {
       required: true,
       type: String,
-      default: null
+      default: ""
     },
 
     alt: {
       required: false,
-      type: [String, null],
+      type: String,
       default: function(value) {
         if (value) {
           return value;

@@ -8,7 +8,7 @@
     <div
       :class="{
         dWarningContainer: dWarning,
-        errorContainer: dDanger,
+        errorContainer: dError,
         iconPadding: icon,
         maskField: mask
       }"
@@ -34,7 +34,12 @@
         <!-- option --></datalist
       ><!--datalist-->
     </div>
-    <input-response :dWarning="dWarning" :error="dDanger" />
+    <input-response
+      :warning="alert ? alert.warning : false"
+      :error="alert ? alert.error : false"
+      :info="alert ? alert.info : dValue ? maxlength - dValue.length < 0 : ''"
+      :success="alert ? alert.success : false"
+    />
   </div>
 </template>
 
@@ -52,14 +57,14 @@ export default {
     //sets heading/Label for the input field
     label: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
     //sets name attribute for the input field (required field in case of forms)
     tag: {
       required: false,
-      type: [String, null],
+      type: String,
       default: "dropdownInput"
     },
 
@@ -95,7 +100,7 @@ export default {
     //if set true wors like a dropdown list while if toggles between
     strict: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: true
     },
 
@@ -115,7 +120,7 @@ export default {
     //sets the placeholder attribute for the input field
     placeholder: {
       required: false,
-      type: [String, null],
+      type: String,
       default: function(props) {
         if (props.strict) {
           return "Select an option...";
@@ -134,56 +139,58 @@ export default {
     //sets the multiple attribute for the input field to accept multiple values
     multiple: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //sets the manual alerts
     alertMessage: {
       required: false,
-      type: [Object, null],
-      default: null
+      type: Object,
+      default: () => {
+        return {};
+      }
     },
 
     //sets the required attribute for the input field
     required: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //sets the disabled attribute for the input field
     disabled: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //sets the autofocus attribute for the input field
     autofocus: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //sets the autocomplete attribute for the input field
     autocomplete: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: true
     },
 
     //checks if label options should appear on the same line or not
     inline: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
     //reserves space and creates a mask if set to true
     mask: {
       required: false,
-      type: [Boolean, null],
+      type: Boolean,
       default: false
     },
 
@@ -191,12 +198,12 @@ export default {
     //a valid fontawesome icons class string is a string which starts with fas/far/fab/fa
     icon: {
       required: false,
-      type: [String, null],
-      default: null
+      type: String,
+      default: ""
     },
 
     keyup: {
-      type: [Array, null],
+      type: Array,
       required: false,
       default: () => ["keyup.tab", "keyup.enter"]
     }
@@ -207,7 +214,7 @@ export default {
   data() {
     return {
       //stores errors thrown by the input fields
-      dDanger: null,
+      dError: null,
 
       //stores errors thrown by the input fields
       dWarning: null,
@@ -224,7 +231,7 @@ export default {
     },
 
     //send error messages back to parent component
-    dDanger: function(newValue) {
+    dError: function(newValue) {
       this.$emit("alerts", "error", newValue);
     }
   }, //watch
@@ -272,13 +279,13 @@ export default {
 
       //if errorVal exists trigger an alert and set dWarning message
       if (alertVal) {
-        this.dDanger =
+        this.dError =
           "Invalid Input: The preset value(s) " +
           alertVal +
           " is/are not included in the options for the dropdown.";
       }
     } else if (val) {
-      this.dDanger =
+      this.dError =
         "Invalid Input: The preset value(s) " + val + " are not valid";
     }
 
@@ -290,7 +297,7 @@ export default {
 
     if (alertMessage) {
       if (alertMessage["error"]) {
-        this.dDanger = alertMessage["error"];
+        this.dError = alertMessage["error"];
       } else if (alertMessage["dWarning"]) {
         this.dWarning = alertMessage["dWarning"];
       } else if (alertMessage["success"]) {
@@ -306,7 +313,7 @@ export default {
     //it also emits/send the current textbox value to  parent component as v-model attribute value
     validate: function() {
       //initialize dWarning and error messages to null to accomodate change in alert messages
-      this.dDanger = null;
+      this.dError = null;
       this.dWarning = null;
       //loads current value stored from selectedOption(data) into val(temp) variable val for readability of code
       const val = this.selectedOption;
@@ -327,7 +334,7 @@ export default {
       //if a value for val(temp) does not exists  and is required, thentrigger error and set error message
       else {
         if (this.required) {
-          this.dDanger = "Required field.";
+          this.dError = "Required field.";
         }
       }
     } //validate

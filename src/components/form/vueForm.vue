@@ -42,7 +42,10 @@ export default defineComponent({
       required: false,
       type: Object,
       default: () => {
-        return { error: "", warning: "" };
+        return {
+          error: "",
+          warning: ""
+        };
       }
     },
     ctx: {
@@ -50,9 +53,9 @@ export default defineComponent({
       type: Function
     },
     tag: {
-      required: false,
+      required: true,
       type: String,
-      default: ""
+      default: "form"
     },
     autocomplete: {
       required: false,
