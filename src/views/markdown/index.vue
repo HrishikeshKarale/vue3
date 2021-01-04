@@ -5,9 +5,10 @@
       :value="textValue"
       tag="task"
       placeholder="#head"
+      :alert="alertObject"
       :maxlength="maxlength"
-      @alerts="alerts"
-      @input="val => (textValue = val)"
+      @notify="notify"
+      @value="val => (textValue = val)"
     />
     <code>
       <div>
@@ -16,9 +17,7 @@
           tag="downloadMarkdownFile"
           category="small"
           icon="fas fa-file-download"
-          :ctx="
-            downloadToFile.bind(this, textValue, 'markdown.md', 'text/plain')
-          "
+          :ctx="downloadToFile.bind(this, 'markdown.md')"
         />
         <vue-clipboard id="copyHtml" :copy="markText" text="HTML" />
       </div>
@@ -28,6 +27,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
+
+import notify from "@/typeScript/notify";
+
 import vueButton from "@/components/button/vueButton.vue";
 import vueClipboard from "@/components/code/vueClipboard.vue";
 import vueTextarea from "@/components/form/vueTextarea.vue";
@@ -41,6 +43,10 @@ export default defineComponent({
   },
 
   setup() {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const marked = require("marked");
+    const maxlength = 10000;
+    const { alertObject } = notify();
     const textValue = ref(
       "Marked - Markdown Parser\n\
 ========================\n\
@@ -75,20 +81,17 @@ Ready to start writing?  Either start changing stuff on the left or\n\n\
 [Markdown]: http://daringfireball.net/projects/markdown/"
     );
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const marked = require("marked");
-    const maxlength = 10000;
 
     const markText = computed(() => {
       return marked(textValue.value);
     });
 
     const downloadToFile = (
-      content: string,
-      filename: string,
-      contentType: string
+      filename = "newFile.text",
+      contentType = "text/plain"
     ): void => {
       const a = document.createElement("a");
-      const file = new Blob([content], { type: contentType });
+      const file = new Blob([textValue.value], { type: contentType });
 
       a.href = URL.createObjectURL(file);
       a.download = filename;
@@ -97,7 +100,14 @@ Ready to start writing?  Either start changing stuff on the left or\n\n\
       URL.revokeObjectURL(a.href);
     };
 
-    return { textValue, markText, maxlength, downloadToFile };
+    return {
+      textValue,
+      markText,
+      maxlength,
+      downloadToFile,
+      alertObject,
+      notify
+    };
   }
 });
 </script>
