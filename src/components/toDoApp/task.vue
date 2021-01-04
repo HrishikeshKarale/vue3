@@ -35,11 +35,9 @@ import { defineComponent, ref } from "vue";
 import { useStore } from "@/store";
 import { MutationType } from "@/store/mutations";
 import vueButton from "@/components/button/vueButton.vue";
-import alerts from "@/typeScript/alerts";
 
 export default defineComponent({
   components: { vueButton },
-  mixins: [alerts],
   props: {
     id: {
       type: Number,
@@ -60,12 +58,12 @@ export default defineComponent({
     completed: {
       type: String,
       required: false,
-      default: null
+      default: ""
     },
     tags: {
       type: Array,
       required: false,
-      default: null
+      default: () => []
     }
   },
 
@@ -93,18 +91,18 @@ export default defineComponent({
     // // eslint-disable-next-line @typescript-eslint/no-unused-vars
     // let dWarning = "";
     // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // let dDanger = "";
+    // let dError = "";
     // const alerts = function(type: string, message: string): void {
     //   if (type == "warning") {
     //     dWarning = message;
     //   } else if (type == "error") {
-    //     dDanger = message;
+    //     dError = message;
     //   } else {
     //     alert("error in input alert module");
     //   }
     // }; //alerts
 
-    return { toggleCompletion, removeTask, alerts, booleanTrue };
+    return { toggleCompletion, removeTask, booleanTrue };
   }
 });
 </script>

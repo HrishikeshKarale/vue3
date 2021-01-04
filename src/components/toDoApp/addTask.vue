@@ -2,10 +2,10 @@
   <vue-form
     :ctx="createTask.bind(this)"
     tag="Create Task"
-    :alerts="{ error: danger, warning: warning }"
+    :alert="alertObject"
     :validate="!booleanTrue"
     :autocomplete="!booleanTrue"
-    @alerts="alerts"
+    @notify="notify"
   >
     <template #formDescription>
       <h3>
@@ -23,16 +23,16 @@
         placeholder="Enter Tasks...."
         :required="booleanTrue"
         icon="fas fa-clipboard"
-        @alerts="alerts"
-        @input="val => (task = val)"
+        @notify="notify"
+        @value="val => (task = val)"
       />
       <vue-textarea
         label="Description"
         :value="description"
-        tag="task"
-        placeholder="Enter Tasks...."
+        tag="taskdescription"
+        placeholder="Enter details...."
         icon="fas fa-clipboard"
-        @alerts="alerts"
+        @notify="notify"
         @input="val => (description = val)"
       />
       <input-tags :tags="tags.list" @value="val => (tags.list = val)" />
@@ -69,6 +69,10 @@ export default defineComponent({
     const booleanTrue = true;
     const description = ref("");
     const tags = reactive({ list: [] });
+    const alertObject = reactive({
+      warning: "",
+      error: ""
+    });
 
     const store = useStore();
 
@@ -88,15 +92,11 @@ export default defineComponent({
     };
 
     //used to trigger events if component throws an error
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const warning = ref("");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const danger = ref("");
-    const alerts = function(type: string, message: string): void {
+    const notify = function(type: string, message: string): void {
       if (type == "warning") {
-        warning.value = message;
+        alertObject.warning = message;
       } else if (type == "error") {
-        danger.value = message;
+        alertObject.error = message;
       } else {
         alert("error in input alert module");
       }
@@ -107,9 +107,8 @@ export default defineComponent({
       task,
       description,
       tags,
-      alerts,
-      warning,
-      danger,
+      notify,
+      alertObject,
       booleanTrue
     };
   }

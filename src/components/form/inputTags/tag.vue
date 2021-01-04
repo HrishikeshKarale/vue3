@@ -17,7 +17,7 @@ export default defineComponent({
       required: true
     },
     ctx: {
-      type: [Function, null],
+      type: Function,
       required: false
     }
   }

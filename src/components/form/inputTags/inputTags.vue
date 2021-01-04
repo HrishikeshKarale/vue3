@@ -7,11 +7,9 @@
       <searchable-dropdown-list
         tag="tagGenerator"
         :options="tags"
-        :value="tag"
         :strict="!booleanTrue"
         placeholder="Enter tags..."
         icon="fas fa-tags"
-        @alerts="alerts"
         @input="addTag"
       />
     </li>
@@ -28,11 +26,9 @@
 import { defineComponent, ref } from "vue";
 
 import searchableDropdownList from "@/components/form/searchableDropdownList.vue";
-import alerts from "@/typeScript/alerts";
 
 export default defineComponent({
   components: { searchableDropdownList },
-  mixins: [alerts],
 
   props: {
     tags: {
@@ -79,21 +75,7 @@ export default defineComponent({
       );
     };
 
-    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // let dWarning = "";
-    // // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    // let dDanger = "";
-    // const alerts = function(type: string, message: string) {
-    //   if (type == "warning") {
-    //     dWarning = message;
-    //   } else if (type == "error") {
-    //     dDanger = message;
-    //   } else {
-    //     alert("error in input alert module");
-    //   }
-    // };
-
-    return { addTag, removeTag, tag, tagElement, alerts, booleanTrue };
+    return { addTag, removeTag, tag, tagElement, booleanTrue };
   }
 });
 </script>
