@@ -79,6 +79,8 @@ import vueForm from "@/components/form/vueForm.vue";
 import textInput from "@/components/form/textInput.vue";
 import passwordInput from "@/components/form/passwordInput.vue";
 
+import notify from "@/typeScript/notify";
+
 import firebase from "@/typeScript/utilities/firebase";
 
 export default defineComponent({
@@ -102,18 +104,8 @@ export default defineComponent({
     const isLoggedIn = ref(!booleanTrue);
     const isLoading = ref(!booleanTrue);
     const appUser = reactive({ user: {} });
-    const alertObject = reactive({
-      warning: "",
-      error: ""
-    });
 
-    const notify = (type, message: string): void => {
-      if (type === "error") {
-        alertObject.error = message;
-      } else {
-        alertObject.warning = message;
-      }
-    };
+    const { alertObject } = notify();
 
     const handleSignup = () => {
       isLoading.value = true;

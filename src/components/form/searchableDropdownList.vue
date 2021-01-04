@@ -36,9 +36,9 @@
     </div>
     <input-response
       :warning="alert ? alert.warning : false"
-      :error="alert ? alert.error : false"
+      :error="alert ? alert.error: ''"
       :info="alert ? alert.info : dValue ? maxlength - dValue.length < 0 : ''"
-      :success="alert ? alert.success : false"
+      :success="alert ? alert.success : ''"
     />
   </div>
 </template>

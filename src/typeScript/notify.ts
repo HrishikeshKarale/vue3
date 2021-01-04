@@ -3,8 +3,10 @@ import { reactive } from 'vue'
 export default function alert() {
 
   const alertObject = reactive({
+    error: "",
     warning: "",
-    error: ""
+    info: "",
+    success: ""
   });
 
   const notify = (type: string, message: string): void => {

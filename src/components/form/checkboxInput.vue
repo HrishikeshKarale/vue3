@@ -1,13 +1,13 @@
 // https://tympanus.net/Development/AnimatedCheckboxes/
 <template>
-  <div class="radioInput" :class="{ inline: inline }">
+  <div class="checkboxInput" :class="{ inline: inline }">
     <label
-      v-if="label || (type == 'checkbox' && !options)"
-      :class="{ maskField: mask, checked: !options && value }"
+      v-if="label || (type == 'checkbox' && !options?.length)"
+      :class="{ maskField: mask, checked: !options?.length && value }"
     >
       <!-- checkbox only -->
       <input
-        v-if="type == 'checkbox' && !options && !mask"
+        v-if="type !== 'radio' && !options?.length && !mask"
         ref="singleCheckbox"
         type="checkbox"
         :name="tag"
@@ -22,12 +22,11 @@
       <!-- stores the value of the component to be used when validating a form -->
       <input :name="tag" type="hidden" :value="value" :required="required" />
       <vue-button
-        v-if="options && value"
+        v-if="options?.length && value"
         id="clearSelection"
         tag="resetValue"
         text="Reset"
-        icon="fas fa-undo"
-        category="icon-sm"
+        category="text-sm"
         :ctx="clearSelection.bind(this)"
       />
     </label>
@@ -35,8 +34,8 @@
       v-if="options"
       :class="{
         box: box,
-        warningContainer: dWarning,
-        errorContainer: dError,
+        warningContainer: alert ? alert.warning : false,
+        errorContainer: alert ? alert.error : false,
         maskField: mask,
         inline: inline
       }"
@@ -46,18 +45,19 @@
           v-for="(option, index) in options"
           :key="index"
           :class="{
-            errorLabel: dError,
-            checked:
-              value && type == 'checkbox'
-                ? value.includes(option)
-                : option == value
+            errorLabel: alert ? alert.error : false,
+            checked: value.includes(option)
           }"
           :style="{
             'color: #aaaaaa; cursor: not-allowed;': disabled
           }"
         >
           <input
-            :ref="option"
+            :ref="
+              el => {
+                checkbox[index] = el;
+              }
+            "
             :type="type"
             :name="option"
             :checked="
@@ -75,25 +75,24 @@
       </template>
     </div>
     <input-response
-      :warning="alert ? alert.warning : false"
-      :error="alert ? alert.error : false"
+      :warning="alert ? alert.warning : ''"
+      :error="alert ? alert.error : ''"
       :info="alert ? alert.info : dValue ? maxlength - dValue.length < 0 : ''"
-      :success="alert ? alert.success : false"
+      :success="alert ? alert.success : ''"
     />
   </div>
 </template>
 
 <script>
-import inputResponse from "@/components/alert/inputResponse";
+import { defineComponent, ref, onBeforeUpdate } from "vue";
+import inputResponse from "@/components/alert/inputResponse.vue";
 import vueButton from "@/components/button/vueButton.vue";
 
-export default {
-  name: "RadioInput", //watch
-
+export default defineComponent({
   components: {
     inputResponse,
     vueButton
-  }, //emits
+  }, //components
 
   props: {
     //sets type for the input field
@@ -119,13 +118,13 @@ export default {
     tag: {
       required: false,
       type: String,
-      default: "radioInput"
+      default: "checkboxInput"
     },
 
     //users can pass preset values for the input field
     value: {
       required: true,
-      type: [Boolean, Array, String, Number, null],
+      type: [Boolean, Array, String, Number],
       // type: function(props) {
       //   if (!props.options) {
       //     return [Boolean, null];
@@ -156,12 +155,10 @@ export default {
     },
 
     //sets the manual alerts
-    alertMessage: {
+    alert: {
       required: false,
       type: Object,
-      default: () => {
-        return {};
-      }
+      default: null
     },
 
     //sets the required attribute for the input field
@@ -205,92 +202,72 @@ export default {
       type: Boolean,
       default: false
     }
-  }, //methods
+  }, //props
 
-  emits: ["selected"],
+  setup(props, { emit }) {
+    const singleCheckbox = ref(null);
+    const checkbox = ref([]);
 
-  data() {
-    const dError = null;
-    const dWarning = null;
-    const dSuccess = null;
-    const dInfo = null;
-    return {
-      //stores errors thrown by the input fields
-      dError: dError,
-      dWarning: dWarning,
-      dSuccess: dSuccess,
-      dInfo: dInfo
-    }; //return
-  }, //beforeMount
+    // make sure to reset the refs before each update
+    onBeforeUpdate(() => {
+      checkbox.value = [];
+    });
 
-  beforeMount() {
-    const alertMessage = this.alertMessage;
-
-    if (alertMessage) {
-      if (alertMessage["error"]) {
-        this.dError = alertMessage["error"];
-      } else if (alertMessage["warning"]) {
-        this.dWarning = alertMessage["warning"];
-      } else if (alertMessage["success"]) {
-        this.dSuccess = alertMessage["success"];
-      } else if (alertMessage["info"]) {
-        this.dInfo = alertMessage["info"];
-      }
-    }
-  }, //data
-
-  methods: {
-    clearSelection: function() {
-      const options = this.options;
-      options.forEach(option => {
-        let tag = this.$refs[option].checked;
-
-        if (tag) {
-          tag = false;
-        }
-      });
-      this.$emit("selected", null);
-    }, //clearSelection
-
-    check: function(checkedValue) {
-      let value = this.value;
-      if (this.options) {
+    const check = checkedValue => {
+      let val = props?.value;
+      if (props.options?.length) {
         //checkbox
-        if (this.type == "checkbox") {
-          if (value) {
-            value = [...value];
-            const index = value.indexOf(checkedValue);
-            if (index != -1) {
-              value = value.splice(index, 1);
-              // console.log("check: ", Array.from(value), typeof value);
-              this.$emit("selected", value);
+        if (props.type !== "radio") {
+          if (val) {
+            //check if already exist in the form of an array
+            //if not then convert it into an array
+            if (Array.isArray(val)) {
+              val = [...val];
             } else {
-              value = [...this.value, checkedValue];
-              this.$emit("selected", value);
+              val = [val];
+            }
+            const index = val.indexOf(checkedValue);
+            if (index > -1) {
+              val.splice(index, 1);
+              // console.log("check: ", Array.from(val), typeof val);
+              emit("value", val);
+            } else {
+              val = [...val, checkedValue];
+              emit("value", val);
             }
           } else {
-            this.$emit("selected", [checkedValue]);
+            emit("value", [checkedValue]);
           }
         } else {
           // if type = radio
           // console.log(checkedValue, this.type);
-          this.$emit("selected", checkedValue);
+          emit("value", checkedValue);
         }
       } else {
         //this.options does not exist
         // console.log(this.$refs["singleCheckbox"].checked);
-        this.$emit("selected", this.$refs["singleCheckbox"].checked);
+        emit("value", singleCheckbox.value.checked);
       }
-    } //check
-  } //components
-}; //default
+    }; //check
+
+    const clearSelection = () => {
+      const element = checkbox.value;
+      element.forEach(el => {
+        el.checked = false;
+      });
+      emit("value", null);
+    }; //clearSelection
+
+    return { singleCheckbox, check, clearSelection, checkbox };
+  }
+}); //default
 </script>
 
 <style lang="less" scoped>
 @import (reference) "../../less/customMixins.less";
 @import (reference) "../../less/customVariables.less";
 
-.radioInput {
+.checkboxInput {
   .checkboxCss();
 }
 </style>
