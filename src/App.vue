@@ -167,7 +167,6 @@ export default defineComponent({
     };
 
     const handleLogin = () => {
-      console.log("app", username.value, password.value);
       isLoading.value = true;
       // using custom token
       // firebase.auth().signInWithCustomToken(token)

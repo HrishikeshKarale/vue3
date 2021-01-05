@@ -90,7 +90,7 @@
       </div>
       <input-response
         :warning="alert ? alert.warning : false"
-        :error="alert ? alert.error: ''"
+        :error="alert ? alert.error : ''"
         :info="alert ? alert.info : dValue ? maxlength - dValue.length < 0 : ''"
         :success="alert ? alert.success : ''"
       />
@@ -131,6 +131,8 @@
           :disabled="disabled"
           :readonly="readonly"
           :autocomplete="autocomplete"
+          v-on:keyup[0]="validate"
+          v-on:keyup[1]="validate"
           @input="validate"
         />
         <span
@@ -327,6 +329,13 @@ export default defineComponent({
       required: false,
       type: Boolean,
       default: false
+    },
+
+    //uses the values to trigger validation by using v-on attribute
+    keyup: {
+      type: Array,
+      required: false,
+      default: () => ["keyup.tab", "keyup.enter"]
     }
   }, //props
 
@@ -379,7 +388,6 @@ export default defineComponent({
 .vueInput {
   width: fit-content;
   & > div {
-    min-width: 160px;
     .inputcss();
   }
 }

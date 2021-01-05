@@ -7,8 +7,8 @@
     </label>
     <div
       :class="{
-        dWarningContainer: dWarning,
-        errorContainer: dError,
+        warningContainer: alert ? alert.warning : false,
+        errorContainer: alert ? alert.error : false,
         iconPadding: icon,
         maskField: mask
       }"
@@ -16,7 +16,7 @@
       <span v-if="icon" :class="icon" />
       <input
         v-if="!mask"
-        v-model="selectedOption"
+        v-model="dValue"
         :name="tag"
         :list="tag"
         :placeholder="placeholder"
@@ -25,18 +25,19 @@
         :disabled="disabled"
         :autofocus="autofocus"
         :maxlength="maxlength"
+        v-on:keyup[0]="validate"
+        v-on:keyup[1]="validate"
         @change="validate"
       />
       <datalist :id="tag">
         <option v-for="(option, index) in options" :key="index" :value="option">
           {{ option }}
         </option>
-        <!-- option --></datalist
-      ><!--datalist-->
+      </datalist>
     </div>
     <input-response
       :warning="alert ? alert.warning : false"
-      :error="alert ? alert.error: ''"
+      :error="alert ? alert.error : ''"
       :info="alert ? alert.info : dValue ? maxlength - dValue.length < 0 : ''"
       :success="alert ? alert.success : ''"
     />
@@ -44,11 +45,13 @@
 </template>
 
 <script>
+import { defineComponent, ref, onBeforeMount } from "vue";
+
+import validator from "@/typeScript/validator";
+
 import inputResponse from "@/components/alert/inputResponse";
 
-export default {
-  name: "SearchableDropdownList",
-
+export default defineComponent({
   components: {
     inputResponse
   }, //data
@@ -84,7 +87,7 @@ export default {
             break;
         }
         if (props.multiple) {
-          temp = [temp, Array, null];
+          temp = [temp, Array];
         }
         return temp;
       },
@@ -113,7 +116,7 @@ export default {
     //sets the format/pattern for acceptable values for the input field
     pattern: {
       required: false,
-      type: [RegExp, String, null],
+      type: [RegExp, String],
       default: new RegExp(/([a-zA-Z0-9](_|-| )[a-zA-Z0-9])*/)
     },
 
@@ -132,7 +135,7 @@ export default {
     //sets the maxlength attribute for the input field
     maxlength: {
       required: false,
-      type: [Number, null],
+      type: Number,
       default: 50
     },
 
@@ -144,11 +147,14 @@ export default {
     },
 
     //sets the manual alerts
-    alertMessage: {
+    alert: {
       required: false,
       type: Object,
       default: () => {
-        return {};
+        return {
+          error: "",
+          warning: ""
+        };
       }
     },
 
@@ -202,6 +208,7 @@ export default {
       default: ""
     },
 
+    //uses the values to trigger validation by using v-on attribute
     keyup: {
       type: Array,
       required: false,
@@ -209,145 +216,101 @@ export default {
     }
   }, //props
 
-  emits: ["alerts", "input"], //components
+  setup(props, { emit }) {
+    const dValue = ref(props.value);
+    const { isStrict, isRequired } = validator(props, emit, dValue);
 
-  data() {
-    return {
-      //stores errors thrown by the input fields
-      dError: null,
-
-      //stores errors thrown by the input fields
-      dWarning: null,
-
-      //stores dropdown values
-      selectedOption: null
-    }; //return
-  }, //beforeMount
-
-  watch: {
-    //send dWarning messages back to parent component
-    dWarning: function(newValue) {
-      this.$emit("alerts", "warning", newValue);
-    },
-
-    //send error messages back to parent component
-    dError: function(newValue) {
-      this.$emit("alerts", "error", newValue);
-    }
-  }, //watch
-
-  beforeMount() {
-    //store value of prop in temp variable for code readability
-    const val = this.value;
-    const options = this.options;
-    const strict = this.strict;
-    const multiple = this.multiple;
-
-    //if val is a singlevalue, check if it is na acceptable input
-    if (!multiple && (typeof val == "string" || typeof val == "number")) {
-      //if value is an acceptable input store it in selectedOption for future manipulation
-      if ((options && options.includes(val)) || !strict) {
-        this.selectedOption = val;
-      }
-      //if not trigger alert and set error message
-      else if (this.strict) {
-        this.error =
-          "Invalid Input: The preset value " +
-          val +
-          " is not included in the options for the dropdown.";
-      }
-    }
-    //if val is an array check if each value towards acceptable values as input
-    else if (multiple && Array.isArray(val)) {
-      const tempVal = [];
-      const alertVal = [];
-
-      //loop through each value to check for validity of input value
-      for (const v in val) {
-        //if value is an acceptable input store sit intempVal for future manipulation
-        if ((options && options.includes(v)) || !strict) {
-          tempVal.push(v);
-        }
-        //if not save it in a temp errorval variable for further use to trigger alert
-        else if (this.strict) {
-          alertVal.push(v);
-        }
-      }
-
-      //save acceptable values back to selectedOption for future manipulation
-      this.selectedOption = tempVal;
-
-      //if errorVal exists trigger an alert and set dWarning message
-      if (alertVal) {
-        this.dError =
-          "Invalid Input: The preset value(s) " +
-          alertVal +
-          " is/are not included in the options for the dropdown.";
-      }
-    } else if (val) {
-      this.dError =
-        "Invalid Input: The preset value(s) " + val + " are not valid";
-    }
-
-    const alertMessage = this.alertMessage;
-
-    if (this.value) {
-      this.validate();
-    }
-
-    if (alertMessage) {
-      if (alertMessage["error"]) {
-        this.dError = alertMessage["error"];
-      } else if (alertMessage["dWarning"]) {
-        this.dWarning = alertMessage["dWarning"];
-      } else if (alertMessage["success"]) {
-        this.success = alertMessage["success"];
-      } else if (alertMessage["info"]) {
-        this.info = alertMessage["info"];
-      }
-    }
-  },
-
-  methods: {
     //validate the textbox input and set alert messages if required.
     //it also emits/send the current textbox value to  parent component as v-model attribute value
-    validate: function() {
-      //initialize dWarning and error messages to null to accomodate change in alert messages
-      this.dError = null;
-      this.dWarning = null;
-      //loads current value stored from selectedOption(data) into val(temp) variable val for readability of code
-      const val = this.selectedOption;
+    const validate = () => {
+      //loads current value stored from dValue(data) into val(temp) variable val for readability of code
+      const val = dValue.value;
 
       //if value for val(temp) exists check for dWarning triggers
       if (val) {
         //if an acceptable value exists,emit/send new values to parent component v-model attribute
         //if not then trigger dWarning and set dWarning message
-        if (this.options.includes(val) || !this.strict) {
-          this.$emit("input", val);
+        if (props.options.includes(val) || !props.strict) {
+          emit("value", val);
+          emit("notify", "error", "");
         }
         //if options do not include the optio na dn user customized input is not acceptable then trigger alert and set dWarning message
-        else if (this.strict) {
-          this.dWarning =
-            "Invalid Input. Please select an option from the options below.";
+        else if (isStrict()) {
+          //automatically notifies the parent component/host about the error
         }
       }
       //if a value for val(temp) does not exists  and is required, thentrigger error and set error message
-      else {
-        if (this.required) {
-          this.dError = "Required field.";
+      else if (isRequired()) {
+        emit("value", "");
+      }
+    }; //validate
+
+    onBeforeMount(() => {
+      //store value of prop in temp variable for code readability
+      const val = props.value;
+      const options = props.options;
+      const strict = props.strict;
+      const multiple = props.multiple;
+
+      //if val is a singlevalue, check if it is na acceptable input
+      if (!multiple && (typeof val == "string" || typeof val == "number")) {
+        //if value is an acceptable input store it in dValue for future manipulation
+        if ((options && options.includes(val)) || !strict) {
+          dValue.value = val;
+        }
+        //if not trigger alert and set error message
+        else if (isStrict()) {
+          //automatically notifies the parent component/host about the error
         }
       }
-    } //validate
-  } //watch
-}; //default
+      //if val is an array check if each value towards acceptable values as input
+      else if (multiple && Array.isArray(val)) {
+        const tempVal = [];
+        const alertVal = [];
+
+        //loop through each value to check for validity of input value
+        for (const v in val) {
+          //if value is an acceptable input store sit intempVal for future manipulation
+          if ((options && options.includes(v)) || !props.strict) {
+            tempVal.push(v);
+          }
+          //if not save it in a temp errorval variable for further use to trigger alert
+          else if (isStrict()) {
+            alertVal.push(v);
+          }
+        }
+
+        //save acceptable values back to dValue for future manipulation
+        dValue.value = tempVal;
+
+        //if errorVal exists trigger an alert and set dWarning message
+        if (alertVal) {
+          emit(
+            "notify",
+            "warning",
+            "Invalid Input: The preset value(s) " +
+              alertVal +
+              " is/are not included in the options for the dropdown."
+          );
+        }
+      } else if (val) {
+        emit(
+          "notify",
+          "warning",
+          "Invalid Input: The preset value(s) " + val + " are not valid"
+        );
+      }
+    });
+
+    return { dValue, validate };
+  }
+}); //default
 </script>
 
 <style lang="less" scoped>
 @import (reference) "../../less/customMixins.less";
 
 .searchableDropdownList {
-  min-width: 160px;
-
   .inputcss();
 }
 </style>

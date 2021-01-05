@@ -1,6 +1,5 @@
 <template>
   <task v-for="item in list" :key="item" v-bind="item" />
-  {{ list }}
 </template>
 
 <script lang="ts">

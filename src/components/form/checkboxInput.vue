@@ -15,6 +15,8 @@
         :disabled="disabled"
         :autofocus="autofocus"
         @input="check(value)"
+        v-on:keyup[0]="check(value)"
+        v-on:keyup[1]="check(value)"
       />
       {{ label }}
       <abbr v-if="required" title="Required Field">*</abbr>
@@ -69,6 +71,8 @@
             :disabled="disabled"
             :autofocus="index == 0 ? autofocus : false"
             @input="check(option)"
+            v-on:keyup[0]="check(option)"
+            v-on:keyup[1]="check(option)"
           />
           {{ option }}
         </label>
@@ -201,6 +205,13 @@ export default defineComponent({
       required: false,
       type: Boolean,
       default: false
+    },
+
+    //uses the values to trigger validation by using v-on attribute
+    keyup: {
+      type: Array,
+      required: false,
+      default: () => ["keyup.tab", "keyup.enter"]
     }
   }, //props
 

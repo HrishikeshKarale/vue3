@@ -25,6 +25,8 @@
         :disabled="disabled"
         :readonly="readonly"
         :required="required"
+        v-on:keyup[0]="validate"
+        v-on:keyup[1]="validate"
         @input="validate"
         @blur="followsPattern"
       />
@@ -159,6 +161,13 @@ export default defineComponent({
       required: false,
       type: Boolean,
       default: false
+    },
+
+    //uses the values to trigger validation by using v-on attribute
+    keyup: {
+      type: Array,
+      required: false,
+      default: () => ["keyup.tab", "keyup.enter"]
     }
   }, //props
 
@@ -175,7 +184,6 @@ export default defineComponent({
 @import (reference) "../../less/customMixins.less";
 
 .vueTextarea {
-  min-width: 160px;
   .inputcss();
 }
 </style>

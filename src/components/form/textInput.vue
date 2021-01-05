@@ -28,6 +28,8 @@
         :readonly="readonly"
         :autocomplete="autocomplete"
         :required="required"
+        v-on:keyup[0]="validate"
+        v-on:keyup[1]="validate"
         @input="validate"
         @blur="followsPattern"
       />
@@ -173,6 +175,13 @@ export default defineComponent({
       required: false,
       type: String,
       default: ""
+    },
+
+    //uses the values to trigger validation by using v-on attribute
+    keyup: {
+      type: Array,
+      required: false,
+      default: () => ["keyup.tab", "keyup.enter"]
     }
   }, //props
 
@@ -191,7 +200,6 @@ export default defineComponent({
 <style lang="less" scoped>
 @import (reference) "../../less/customMixins.less";
 .textInput {
-  min-width: 160px;
   .inputcss();
   /* .placeholder(); */
 }

@@ -70,7 +70,6 @@ export default defineComponent({
     // };
 
     const beforeLeave = function(element: HTMLElement): void {
-      console.log(typeof element);
       prevHeight.value = getComputedStyle(element).height;
     }; //beforeLeave
 

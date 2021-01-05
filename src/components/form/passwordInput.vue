@@ -29,6 +29,8 @@
           :readonly="readonly"
           :required="required"
           :autocomplete="autocomplete"
+          v-on:keyup[0]="ctx"
+          v-on:keyup[1]="ctx"
           @input="validate"
           @blur="followsPattern"
         />
@@ -89,7 +91,7 @@
       </div>
       <input-response
         :warning="alert ? alert.warning : false"
-        :error="alert ? alert.error: ''"
+        :error="alert ? alert.error : ''"
         :info="alert ? alert.info : dValue ? maxlength - dValue.length < 0 : ''"
         :success="alert ? alert.success : ''"
       />
@@ -130,6 +132,8 @@
           :disabled="disabled"
           :readonly="readonly"
           :autocomplete="autocomplete"
+          v-on:keyup[0]="ctx"
+          v-on:keyup[1]="ctx"
           @input="validate"
         />
         <span
@@ -298,6 +302,13 @@ export default defineComponent({
       required: false,
       type: Boolean,
       default: false
+    },
+
+    //uses the values to trigger validation by using v-on attribute
+    keyup: {
+      type: Array,
+      required: false,
+      default: () => ["keyup.tab", "keyup.enter"]
     }
   }, //props
 
@@ -342,7 +353,6 @@ export default defineComponent({
 <style lang="less" scoped>
 @import (reference) "../../Less/customMixins.less";
 .passwordInput {
-  min-width: 160px;
   & > div {
     .inputcss();
   }

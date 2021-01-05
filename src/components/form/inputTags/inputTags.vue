@@ -3,14 +3,16 @@
 <template>
   <ul class="inputTags" ref="tagElement">
     <li>
-      {{ tag }}
       <searchable-dropdown-list
+        label="Enter Tag info"
         tag="tagGenerator"
         :options="tags"
         :strict="!booleanTrue"
+        :alert="alertObject"
         placeholder="Enter tags..."
         icon="fas fa-tags"
-        @input="addTag"
+        @value="addTag"
+        @notify="notify"
       />
     </li>
     <template v-if="tags">
@@ -24,6 +26,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+
+import notify from "@/typeScript/notify";
 
 import searchableDropdownList from "@/components/form/searchableDropdownList.vue";
 
@@ -45,8 +49,9 @@ export default defineComponent({
     const tagElement = ref(null);
     const booleanTrue = true;
 
+    const { alertObject } = notify();
+
     const addTag = (val: string) => {
-      console.log("add", props.tags, val);
       if (!props.tags.includes(val)) {
         emit("value", [...props.tags, val]);
       } else {
@@ -75,7 +80,15 @@ export default defineComponent({
       );
     };
 
-    return { addTag, removeTag, tag, tagElement, booleanTrue };
+    return {
+      addTag,
+      removeTag,
+      tag,
+      tagElement,
+      alertObject,
+      notify,
+      booleanTrue
+    };
   }
 });
 </script>
@@ -89,17 +102,13 @@ ul.inputTags {
   justify-content: flex-start;
   list-style-type: none;
   flex-wrap: wrap;
-  border: 1px solid @secondaryColor;
-  border-radius: @borderRadius;
   height: fit-content;
-  min-width: 160px;
   max-width: 320px;
   & > li {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    borderborder-radius: 2px;
-    font-size: @fontSizeSm;
+    align-items: center;
     border: 1px solid @secondaryColor;
     padding: @spaceSm 0 @spaceSm 0;
     margin: @spaceSm;
@@ -107,6 +116,9 @@ ul.inputTags {
     word-wrap: break-word;
     hyphens: auto;
     border-radius: 4px;
+    &:not(:first-child) {
+      font-size: @fontSizeSm;
+    }
     &:hover {
       & > span:last-child {
         visibility: visible;
@@ -130,17 +142,8 @@ ul.inputTags {
       padding: 0;
       border: none;
       & > .searchableDropdownList {
-        & > div {
-          // border: none;
-        }
-        width: auto !important;
-        input,
-        datalist,
-        option {
-          width: 100% !important;
-        }
         & > .inputResponse {
-          display: none !important;
+          // display: none !important;
         }
       }
     }

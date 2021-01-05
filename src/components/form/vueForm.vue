@@ -6,6 +6,8 @@
     :novalidate="!validate"
     :autocomplete="autocomplete"
     @submit="ctx"
+    v-on:keyup[0]="ctx"
+    v-on:keyup[1]="ctx"
   >
     <div class="description">
       <slot name="formDescription" />
@@ -66,6 +68,13 @@ export default defineComponent({
       required: false,
       type: Boolean,
       default: false
+    },
+
+    //uses the values to trigger validation by using v-on attribute
+    keyup: {
+      type: Array,
+      required: false,
+      default: () => ["keyup.tab", "keyup.enter"]
     }
   }, //props
 

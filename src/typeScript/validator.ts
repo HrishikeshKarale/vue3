@@ -3,10 +3,29 @@ export default function validator(props, emit, dValue) {
   //value ebsent
   const isRequired = function () {
     if (props.required) {
-      return "Required field.";
+      let msg = ""
+      if (!dValue.value) {
+        msg = "Required field.";
+      }
+      emit("notify", "error", msg);
+      return msg;
     }
-    return "";
+    return false;
   }; //isRequired
+
+  //value present
+  const isStrict = () => {
+    if (props.strict) {
+      let msg = "";
+      if (props.options?.length && dValue?.value && props.options.indexOf(dValue.value) == -1) {
+        msg = "Invalid Input. Please select an option from the options below.\n The value " +
+          dValue.value + " is not a valid option.";
+      }
+      emit("notify", "warning", msg);
+      return msg;
+    }
+    return false;
+  }; //isStrict
 
   //value present
   const isTooShort = function () {
@@ -22,6 +41,7 @@ export default function validator(props, emit, dValue) {
     }
     return false;
   }; //isTooShort
+
 
   const isTooLong = () => {
     if (props.maxlength) {
@@ -66,10 +86,9 @@ export default function validator(props, emit, dValue) {
       }
     }
     //if a value for val(temp) does not exists  and is required, thentrigger error and set error message
-    else {
+    else if (isRequired()) {
       emit("value", "");
-      emit("notify", "error", isRequired());
     }
   }; //validator
-  return { validate, followsPattern };
+  return { validate, followsPattern, isStrict, isRequired };
 };

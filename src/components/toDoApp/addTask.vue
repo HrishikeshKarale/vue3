@@ -33,7 +33,7 @@
         placeholder="Enter details...."
         icon="fas fa-clipboard"
         @notify="notify"
-        @input="val => (description = val)"
+        @value="val => (description = val)"
       />
       <input-tags :tags="tags.list" @value="val => (tags.list = val)" />
     </template>
