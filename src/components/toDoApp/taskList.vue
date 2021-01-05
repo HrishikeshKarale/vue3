@@ -1,7 +1,9 @@
 <template>
   <div>
     <task
-      v-for="item in status ? list.filter(li => li.status === status) : list"
+      v-for="item in status
+        ? list.filter(li => li.status.includes(status))
+        : list"
       :key="item"
       v-bind="item"
     />

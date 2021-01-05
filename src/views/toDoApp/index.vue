@@ -11,13 +11,25 @@
       Loading...
     </h3>
     <div v-else class="loaded">
-      <add-task :title="formTitle" />
-      <div>
-        <task-list status="created" />
+      <div class="head">
+        <span class="fas fa-plus">
+          CREATE TASK
+          <add-task :title="formTitle" />
+        </span>
       </div>
-      <div>
-        Completed: <b>{{ completedCount }} / {{ totalCount }}</b>
-        <task-list status="complete" />
+      <div class="content">
+        <div
+          v-for="state in statusList"
+          :key="state"
+          :id="state"
+          v-on:ondrop="drop"
+          v-on:ondragover="allowDrop"
+        >
+          <h4>
+            {{ state }}
+          </h4>
+          <task-list :status="state" />
+        </div>
       </div>
     </div>
   </div>
@@ -26,15 +38,17 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted } from "vue";
 
-import addTask from "../../components/toDoApp/addTask.vue";
-import taskList from "../../components/toDoApp/taskList.vue";
+import addTask from "@/components/toDoApp/addTask.vue";
+import taskList from "@/components/toDoApp/taskList.vue";
+// import textInput from "@/components/form/textInput.vue";
+
+import { statusList } from "@/store/state";
 import { useStore } from "@/store";
 import { ActionTypes } from "@/store/actions";
 
 export default defineComponent({
-  name: "toDoApp",
-
   components: {
+    // textInput,
     taskList,
     addTask
   },
@@ -53,7 +67,28 @@ export default defineComponent({
     const completedCount = computed(() => store.getters.completedCount);
     const totalCount = computed(() => store.getters.totalCount);
 
-    return { loading, totalCount, completedCount, formTitle, formDecription };
+    const drop = event => {
+      console.log("drop", event.dataTransfer, event.target, event);
+      event.preventDefault();
+      const data = event.dataTransfer.getData("text");
+      event.target.appendChild(document.getElementById(data));
+    };
+
+    const allowDrop = event => {
+      console.log("allowDrop", event);
+      event.preventDefault();
+    };
+
+    return {
+      drop,
+      allowDrop,
+      loading,
+      totalCount,
+      completedCount,
+      formTitle,
+      statusList,
+      formDecription
+    };
   }
 });
 </script>
@@ -69,28 +104,54 @@ export default defineComponent({
   max-width: 1504px;
   height: 100%;
   & > .loaded {
-    display: flex;
-    text-align: left;
-    position: relative;
-    height: 100%;
-    & > form {
-      flex: 1 1 0;
-      position: sticky;
-      top: @spaceXl;
-      max-width: 320px;
+    & > .head {
+      & > span {
+        position: relative;
+        padding: @spaceMd;
+        cursor: pointer;
+        &:hover {
+          & > form {
+            display: flex;
+            background-color: @backgroundColor;
+            border: 1px solid @secondaryColor;
+            border-radius: 0 @borderRadius @borderRadius @borderRadius;
+          }
+        }
+        & > form {
+          display: none;
+          position: absolute;
+          cursor: default;
+          top: 100%;
+          left: 0;
+          z-index: @headerZ;
+        }
+      }
     }
-    & > div {
+    & > .content {
       display: flex;
-      flex-direction: column;
-      flex: 3 1 0;
       flex-wrap: nowrap;
-      margin-top: @spaceXl;
-      padding: @spaceMd;
-      width: 100%;
-      .scroll(100vh);
-      &:last-child {
+      text-align: left;
+      position: relative;
+      height: 100%;
+      & > div {
+        display: flex;
+        flex-direction: column;
+        align-self: flex-start;
+        justify-self: center;
+        flex-wrap: nowrap;
         flex: 1 1 0;
+        margin-top: @spaceXl;
+        padding: @spaceSm @spaceMd;
+        width: 100%;
+        min-height: 50vh;
+        margin: 0 @spaceMd;
         background-color: #eee;
+        & > h4 {
+          align-self: center;
+          padding: @spaceMd;
+          border-radius: @borderRadius;
+          .boxShadow(@base, @secondaryColor);
+        }
       }
     }
   }

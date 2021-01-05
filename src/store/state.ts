@@ -1,15 +1,14 @@
 export enum Status {
 	created = "CREATED",
 	active = "ACTIVE",
-	limbo = "LIMBO",
 	onHold = "ON_HOLD",
+	limbo = "LIMBO",
 	complete = "COMPLETE"
 }
 
 export const statusList = [
 	"created",
 	"active",
-	"limbo",
 	"onHold",
 	"complete"
 ]
