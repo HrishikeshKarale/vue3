@@ -1,43 +1,50 @@
 <template>
-  <section :class="{ status: status }">
+  <section class="task">
     <h3 class="title">
       {{ todo }}
     </h3>
     <small v-if="completed">{{ completed }}</small>
-    <p class="description">
+    <p v-if="status !== 'complete'" class="description">
       {{ description }}
     </p>
-    <ul v-if="tags" class="tags">
+    <ul v-if="tags && !completed" class="tags">
       <li v-for="tag in tags" :key="tag">
         <span class="fas fa-tag" />
         {{ tag }}
       </li>
     </ul>
     <vue-button
-      tag="completeTask"
-      category="small"
-      :text="`Mark ${!status ? 'Complete' : 'Incomplete'}`"
-      icon="fas fa-tick"
-      :ctx="toggleCompletion.bind(this, !status)"
-    />
-    <vue-button
+      v-if="!completed"
       class="deleteButton"
       tag="deleteTask"
       category="icon-sm"
       icon="fas fa-times"
       :ctx="removeTask.bind(this)"
     />
+    <dropdown-list
+      tag="tagStatus"
+      :value="status"
+      :options="statusList"
+      :strict="booleanTrue"
+      @notify="notify"
+      @value="val => toggleCompletion(val)"
+    />
   </section>
 </template>
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 
+import { statusList } from "@/store/state";
 import { useStore } from "@/store";
 import { MutationType } from "@/store/mutations";
+
+import notify from "@/typeScript/notify";
+
+import dropdownList from "@/components/form/dropdownList.vue";
 import vueButton from "@/components/button/vueButton.vue";
 
 export default defineComponent({
-  components: { vueButton },
+  components: { vueButton, dropdownList },
   props: {
     id: {
       type: Number,
@@ -52,7 +59,7 @@ export default defineComponent({
       required: true
     },
     status: {
-      type: Boolean,
+      type: String,
       required: true
     },
     completed: {
@@ -70,8 +77,9 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const booleanTrue = ref(true);
+    const { alertObject } = notify();
 
-    const toggleCompletion = (status: boolean): void => {
+    const toggleCompletion = (status: string): void => {
       store.commit(MutationType.CompleteItem, {
         // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         id: props.id!,
@@ -102,14 +110,21 @@ export default defineComponent({
     //   }
     // }; //alerts
 
-    return { toggleCompletion, removeTask, booleanTrue };
+    return {
+      toggleCompletion,
+      removeTask,
+      booleanTrue,
+      statusList,
+      notify,
+      alertObject
+    };
   }
 });
 </script>
 <style lang="less">
 @import (reference) "../../less/customVariables.less";
 @import (reference) "../../less/customMixins.less";
-section {
+section.task {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -124,9 +139,6 @@ section {
   height: max-content;
   position: relative;
   background-color: @backgroundColor;
-  &.status {
-    .boxShadow(@base, @secondaryColor);
-  }
   & > .title {
     margin-top: 0;
   }

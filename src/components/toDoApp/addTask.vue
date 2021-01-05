@@ -43,7 +43,7 @@
 import { defineComponent, ref, reactive } from "vue";
 
 import { useStore } from "@/store";
-import { ToDoList } from "@/store/state";
+import { ToDoList, Status } from "@/store/state";
 import { MutationType } from "@/store/mutations";
 import textInput from "@/components/form/textInput.vue";
 import vueTextarea from "@/components/form/vueTextarea.vue";
@@ -82,7 +82,7 @@ export default defineComponent({
           id: Date.now(),
           todo: task.value,
           description: description.value,
-          status: false,
+          status: Status.created,
           completed: null,
           tags: tags.list
         };

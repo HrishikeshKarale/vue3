@@ -1,7 +1,6 @@
-import { reactive } from 'vue'
+import { reactive } from "vue";
 
 export default function alert() {
-
   const alertObject = reactive({
     error: "",
     warning: "",
@@ -18,4 +17,4 @@ export default function alert() {
   };
 
   return { alertObject, notify };
-};
+}

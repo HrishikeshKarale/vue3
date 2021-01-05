@@ -35,7 +35,7 @@ export default {
     const d_close = false;
     return {
       d_alertIcon,
-      d_close,
+      d_close
     }; //return
   }, //data
 

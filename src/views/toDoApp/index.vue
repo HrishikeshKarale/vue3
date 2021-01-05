@@ -13,10 +13,11 @@
     <div v-else class="loaded">
       <add-task :title="formTitle" />
       <div>
-        <div>
-          Completed: <b>{{ completedCount }} / {{ totalCount }}</b>
-        </div>
-        <task-list />
+        <task-list status="created" />
+      </div>
+      <div>
+        Completed: <b>{{ completedCount }} / {{ totalCount }}</b>
+        <task-list status="complete" />
       </div>
     </div>
   </div>
@@ -66,11 +67,14 @@ export default defineComponent({
   align-self: center;
   text-align: center;
   max-width: 1504px;
+  height: 100%;
   & > .loaded {
     display: flex;
     text-align: left;
     position: relative;
+    height: 100%;
     & > form {
+      flex: 1 1 0;
       position: sticky;
       top: @spaceXl;
       max-width: 320px;
@@ -78,15 +82,15 @@ export default defineComponent({
     & > div {
       display: flex;
       flex-direction: column;
+      flex: 3 1 0;
       flex-wrap: nowrap;
       margin-top: @spaceXl;
       padding: @spaceMd;
       width: 100%;
       .scroll(100vh);
-      & > div {
-        &:first-child {
-          align-self: flex-end;
-        }
+      &:last-child {
+        flex: 1 1 0;
+        background-color: #eee;
       }
     }
   }
