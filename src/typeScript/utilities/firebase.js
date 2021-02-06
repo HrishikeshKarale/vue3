@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/database";
 
 // For Firebase JavaScript SDK v7.20.0 and later, `measurementId` is an optional field
 // const firebaseConfig = {
@@ -17,6 +18,7 @@ import "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyDzAEj7oARw3XiVwXbBvq3iAVt_BZBxPKc",
   authDomain: "vue3apps.firebaseapp.com",
+  databaseURL: "https://vue3apps-default-rtdb.firebaseio.com/",
   projectId: "vue3apps",
   storageBucket: "vue3apps.appspot.com",
   messagingSenderId: "197639812600",

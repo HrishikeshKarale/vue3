@@ -13,7 +13,7 @@
       <b>{{ info }}</b>
     </span>
     <span v-else-if="success" class="successMessage fas fa-check-circle">
-      <b>{{ info }}</b>
+      <b>{{ success }}</b>
     </span>
   </div>
 </template>

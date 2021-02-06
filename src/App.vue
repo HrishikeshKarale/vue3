@@ -7,7 +7,7 @@
         <router-link to="/calendar">Calendar</router-link> |
         <router-link to="/markdown">Markdown</router-link> |
         <router-link to="/slider">Slider Carousel</router-link> |
-        <router-link to="/calculator">Calculator</router-link>
+        <router-link to="/chat">Chat</router-link>
       </nav>
       <vue-modal
         v-if="!isLoggedIn"
@@ -19,7 +19,7 @@
         <div class="loginPortal">
           <vue-img class="logo" :src="logo" alt="Logo" />
           <h3>
-            Login
+            Welcome to my Vue3 App drawer
           </h3>
           <vue-form :ctx="handleLogin.bind(this)" tag="loginForm">
             <template v-slot:formElements>
@@ -163,6 +163,7 @@ export default defineComponent({
           // User is signed out
           // ...
         }
+        localStorage.setItem("user", JSON.stringify(appUser.user));
       });
     };
 

@@ -37,6 +37,9 @@
           :class="['fas', dType != 'text' ? 'fa-eye' : 'fa-eye-slash']"
           @click="peek(1)"
         />
+        <div v-if="$slots['isValid'] && dValue" class="conditions">
+          <slot name="isValid" />
+        </div>
         <!-- <div v-if="dValue" class="conditions">
           <div>
             <span
@@ -140,6 +143,9 @@
           :class="['fas', dTypeMatch != 'text' ? 'fa-eye' : 'fa-eye-slash']"
           @click="peek(0)"
         />
+        <div v-if="$slots['isValidMatch'] && dValue" class="conditions">
+          <slot name="isValidMatch" />
+        </div>
         <!-- <div v-if="dValue" class="conditions">
           <div>
             <span
